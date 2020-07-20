@@ -5,10 +5,10 @@ import com.borikov.day8.dao.constant.SqlQuery;
 import com.borikov.day8.entity.Book;
 import com.borikov.day8.exception.DaoException;
 import com.borikov.day8.pool.DataSource;
+import com.borikov.day8.util.BookCreator;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class BookDaoImpl implements BookDao {
@@ -31,12 +31,8 @@ public class BookDaoImpl implements BookDao {
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(SqlQuery.FIND_ALL_BOOKS)) {
             while (resultSet.next()) {
-                long id = resultSet.getInt("id");
-                String name = resultSet.getString("name");
-                int publishingYear = resultSet.getInt("publishingYear");
-                String publishingHouse = resultSet.getString("publishingHouse");
-                List<String> authors = new ArrayList<>(Arrays.asList(resultSet.getString("authors").split(", ")));
-                Book book = new Book(id, name, publishingYear, publishingHouse, authors);
+                BookCreator bookCreator = new BookCreator();
+                Book book = bookCreator.createBookFromResultSet(resultSet);
                 books.add(book);
             }
         } catch (SQLException e) {
@@ -48,21 +44,26 @@ public class BookDaoImpl implements BookDao {
     @Override
     public List<Book> findByName(String name) throws DaoException {
         List<Book> books = new ArrayList<>();
-        try (PreparedStatement statement = DataSource.getConnection().prepareStatement(SqlQuery.FIND_BOOK_BY_NAME);
-        ) {
+        ResultSet resultSet = null;
+        try (Connection connection = DataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(SqlQuery.FIND_BOOK_BY_NAME);) {
             statement.setString(1, name);
-            ResultSet resultSet = statement.executeQuery(SqlQuery.FIND_ALL_BOOKS);
+            resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                long id = resultSet.getInt("id");
-                String bookName = resultSet.getString("name");
-                int publishingYear = resultSet.getInt("publishingYear");
-                String publishingHouse = resultSet.getString("publishingHouse");
-                List<String> authors = new ArrayList<>(Arrays.asList(resultSet.getString("authors").split(", ")));
-                Book book = new Book(id, bookName, publishingYear, publishingHouse, authors);
+                BookCreator bookCreator = new BookCreator();
+                Book book = bookCreator.createBookFromResultSet(resultSet);
                 books.add(book);
             }
         } catch (SQLException e) {
             throw new DaoException("Finding books by name error", e);
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                throw new DaoException(e); // TODO: 20.07.2020 what to do? 
+            }
         }
         return books;
     }

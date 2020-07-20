@@ -11,7 +11,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             BookDao bookDao = BookDaoImpl.getInstance();
-            List<Book> books = bookDao.findAll();
+            List<Book> books = bookDao.findByName("Война и мир");
             System.out.println(books);
         } catch (DaoException e) {
             e.printStackTrace();
