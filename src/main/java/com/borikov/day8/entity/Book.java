@@ -1,8 +1,5 @@
 package com.borikov.day8.entity;
 
-
-import com.borikov.day8.util.IdGenerator;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -12,15 +9,6 @@ public class Book {
     private int publishingYear;
     private String publishingHouse;
     private List<String> authors;
-
-    public Book(String name, int publishingYear, String publishingHouse,
-                List<String> authors) {
-        this.bookId = IdGenerator.generateId();
-        this.name = name;
-        this.publishingYear = publishingYear;
-        this.publishingHouse = publishingHouse;
-        this.authors = authors;
-    }
 
     public Book(long bookId, String name, int publishingYear, String publishingHouse, List<String> authors) {
         this.bookId = bookId;
@@ -66,11 +54,16 @@ public class Book {
         this.authors = authors;
     }
 
-    public boolean equalsToBook(Book book) {
-        if (this == book) {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-        if (book == null) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Book book = (Book) o;
+        if (bookId != book.bookId) {
             return false;
         }
         if (publishingYear != book.publishingYear) {
@@ -104,21 +97,6 @@ public class Book {
             }
         }
         return true;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Book book = (Book) o;
-        if (bookId != book.bookId) {
-            return false;
-        }
-        return equalsToBook(book);
     }
 
     @Override
