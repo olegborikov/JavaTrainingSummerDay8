@@ -11,7 +11,7 @@ public class DataSource {
     private static final HikariDataSource ds;
 
     static {
-        config.setJdbcUrl("jdbc:mysql://localhost:3306/jtsday8?useUnicode=true&serverTimezone=UTC");
+        config.setJdbcUrl("jdbc:mysql://localhost:3306/jtsday8?useUnicode=true&serverTimezone=UTC");// TODO: 21.07.2020 datasource properties
         config.setUsername("root");
         config.setPassword("root");
         config.addDataSourceProperty("cachePrepStmts", "true");

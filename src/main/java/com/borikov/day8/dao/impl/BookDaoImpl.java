@@ -27,7 +27,7 @@ public class BookDaoImpl implements BookDao {
     @Override
     public void add(Book book) throws DaoException {
         try (Connection connection = DataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(ADD_BOOK)) {
+             PreparedStatement statement = connection.prepareStatement(ADD_BOOK, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, book.getName());
             statement.setInt(2, book.getPublishingYear());
             statement.setString(3, book.getPublishingHouse());
@@ -35,6 +35,10 @@ public class BookDaoImpl implements BookDao {
                     .map(n -> String.valueOf(n))
                     .collect(Collectors.joining(", ")));
             statement.executeUpdate();
+            ResultSet generatedKeys = statement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                book.setBookId(generatedKeys.getLong(1));
+            }
         } catch (SQLException e) {
             throw new DaoException("Adding book error", e);
         }

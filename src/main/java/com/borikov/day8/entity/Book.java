@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class Book {
-    private final long bookId;
+    private long bookId;
     private String name;
     private int publishingYear;
     private String publishingHouse;
@@ -20,6 +20,10 @@ public class Book {
 
     public long getBookId() {
         return bookId;
+    }
+
+    public void setBookId(Long bookId) {
+        this.bookId = bookId;
     }
 
     public String getName() {
