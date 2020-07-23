@@ -4,13 +4,13 @@ import java.util.Collections;
 import java.util.List;
 
 public class Book {
-    private long bookId;
+    private Long bookId;
     private String name;
     private int publishingYear;
     private String publishingHouse;
     private List<String> authors;
 
-    public Book(long bookId, String name, int publishingYear, String publishingHouse, List<String> authors) {
+    public Book(Long bookId, String name, int publishingYear, String publishingHouse, List<String> authors) {
         this.bookId = bookId;
         this.name = name;
         this.publishingYear = publishingYear;
@@ -18,7 +18,7 @@ public class Book {
         this.authors = authors;
     }
 
-    public long getBookId() {
+    public Long getBookId() {
         return bookId;
     }
 
@@ -67,11 +67,17 @@ public class Book {
             return false;
         }
         Book book = (Book) o;
-        if (bookId != book.bookId) {
-            return false;
-        }
         if (publishingYear != book.publishingYear) {
             return false;
+        }
+        if (bookId == null) {
+            if (book.bookId != null) {
+                return false;
+            }
+        } else {
+            if (!bookId.equals(book.bookId)) {
+                return false;
+            }
         }
         if (name == null) {
             if (book.name != null) {
@@ -105,9 +111,10 @@ public class Book {
 
     @Override
     public int hashCode() {
-        return (int) (31 * bookId + publishingYear + ((name != null) ? name.hashCode() : 0)
+        return 31 * publishingYear + ((bookId != null) ? bookId.hashCode() : 0)
+                + ((name != null) ? name.hashCode() : 0)
                 + ((publishingHouse != null) ? publishingHouse.hashCode() : 0)
-                + ((authors != null) ? authors.hashCode() : 0));
+                + ((authors != null) ? authors.hashCode() : 0);
     }
 
     @Override

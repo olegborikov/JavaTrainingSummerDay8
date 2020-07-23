@@ -6,24 +6,27 @@ import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class DataSource {
+public class BookDataSource {
+    private static final String URL = "jdbc:mysql://localhost:3306/jtsday8?useUnicode=true&serverTimezone=UTC";
+    private static final String USERNAME = "root";
+    private static final String PASSWORD = "root";
     private static final HikariConfig config = new HikariConfig();
-    private static final HikariDataSource ds;
+    private static final HikariDataSource dataSource;
 
     static {
-        config.setJdbcUrl("jdbc:mysql://localhost:3306/jtsday8?useUnicode=true&serverTimezone=UTC");// TODO: 21.07.2020 datasource properties
-        config.setUsername("root");
-        config.setPassword("root");
+        config.setJdbcUrl(URL);
+        config.setUsername(USERNAME);
+        config.setPassword(PASSWORD);
         config.addDataSourceProperty("cachePrepStmts", "true");
         config.addDataSourceProperty("prepStmtCacheSize", "250");
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-        ds = new HikariDataSource(config);
+        dataSource = new HikariDataSource(config);
     }
 
-    private DataSource() {
+    private BookDataSource() {
     }
 
     public static Connection getConnection() throws SQLException {
-        return ds.getConnection();
+        return dataSource.getConnection();
     }
 }
