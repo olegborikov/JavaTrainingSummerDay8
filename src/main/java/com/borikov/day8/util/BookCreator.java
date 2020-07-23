@@ -1,6 +1,6 @@
 package com.borikov.day8.util;
 
-import com.borikov.day8.entity.Book;
+import com.borikov.day8.model.entity.Book;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

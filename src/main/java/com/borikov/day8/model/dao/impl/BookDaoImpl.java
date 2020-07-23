@@ -1,10 +1,9 @@
-package com.borikov.day8.dao.impl;
+package com.borikov.day8.model.dao.impl;
 
-import com.borikov.day8.dao.BookDao;
-import com.borikov.day8.dao.SqlQuery;
-import com.borikov.day8.entity.Book;
+import com.borikov.day8.model.dao.BookDao;
+import com.borikov.day8.model.dao.SqlQuery;
+import com.borikov.day8.model.entity.Book;
 import com.borikov.day8.exception.DaoException;
-import com.borikov.day8.pool.BookDataSource;
 import com.borikov.day8.pool.ConnectionPool;
 import com.borikov.day8.util.BookCreator;
 import com.borikov.day8.util.BookParser;
@@ -17,8 +16,10 @@ public class BookDaoImpl implements BookDao {
     @Override
     public boolean add(Book book) throws DaoException {
         boolean result;
-        try (Connection connection = BookDataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SqlQuery.ADD_BOOK, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection connection = ConnectionPool.getConnection();
+             PreparedStatement statement =
+                     connection.prepareStatement(SqlQuery.ADD_BOOK,
+                             Statement.RETURN_GENERATED_KEYS)) {
             BookParser bookParser = new BookParser();
             String authorsParsed = bookParser.parseListToString(book.getAuthors());
             statement.setString(1, book.getName());
@@ -40,8 +41,9 @@ public class BookDaoImpl implements BookDao {
     @Override
     public boolean remove(Book book) throws DaoException {
         boolean result;
-        try (Connection connection = BookDataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SqlQuery.REMOVE_BOOK)) {
+        try (Connection connection = ConnectionPool.getConnection();
+             PreparedStatement statement =
+                     connection.prepareStatement(SqlQuery.REMOVE_BOOK)) {
             BookParser bookParser = new BookParser();
             statement.setString(1, book.getName());
             statement.setInt(2, book.getPublishingYear());
@@ -58,7 +60,7 @@ public class BookDaoImpl implements BookDao {
     @Override
     public List<Book> findAll() throws DaoException {
         List<Book> books = new ArrayList<>();
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
+        try (Connection connection = ConnectionPool.getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(SqlQuery.FIND_ALL_BOOKS)) {
             while (resultSet.next()) {
@@ -76,7 +78,7 @@ public class BookDaoImpl implements BookDao {
     public List<Book> findByName(String name) throws DaoException {
         List<Book> books = new ArrayList<>();
         ResultSet resultSet = null;
-        try (Connection connection = BookDataSource.getConnection();
+        try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SqlQuery.FIND_BOOK_BY_NAME)) {
             statement.setString(1, name);
             resultSet = statement.executeQuery();
@@ -97,7 +99,7 @@ public class BookDaoImpl implements BookDao {
     public List<Book> findByPublishingYear(int publishingYear) throws DaoException {
         List<Book> books = new ArrayList<>();
         ResultSet resultSet = null;
-        try (Connection connection = BookDataSource.getConnection();
+        try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SqlQuery.FIND_BOOK_BY_PUBLISHING_YEAR)) {
             statement.setInt(1, publishingYear);
             resultSet = statement.executeQuery();
@@ -118,7 +120,7 @@ public class BookDaoImpl implements BookDao {
     public List<Book> findByPublishingHouse(String publishingHouse) throws DaoException {
         List<Book> books = new ArrayList<>();
         ResultSet resultSet = null;
-        try (Connection connection = BookDataSource.getConnection();
+        try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SqlQuery.FIND_BOOK_BY_PUBLISHING_HOUSE)) {
             statement.setString(1, publishingHouse);
             resultSet = statement.executeQuery();
@@ -139,7 +141,7 @@ public class BookDaoImpl implements BookDao {
     public List<Book> findByAuthor(String author) throws DaoException {
         List<Book> books = new ArrayList<>();
         ResultSet resultSet = null;
-        try (Connection connection = BookDataSource.getConnection();
+        try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SqlQuery.FIND_BOOK_BY_AUTHOR)) {
             statement.setString(1, "%" + author + "%");
             resultSet = statement.executeQuery();

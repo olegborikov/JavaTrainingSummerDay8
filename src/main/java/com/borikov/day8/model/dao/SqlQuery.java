@@ -1,9 +1,10 @@
-package com.borikov.day8.dao;
+package com.borikov.day8.model.dao;
 
 public class SqlQuery {
     public static final String ADD_BOOK = "INSERT INTO books (name, publishingYear, " +
             "publishingHouse, authors) VALUES (?, ?, ?, ?) ";
     public static final String REMOVE_BOOK = "DELETE FROM books WHERE name LIKE ? " +
+            "AND publishingYear = ? AND publishingHouse LIKE ?" +
             "AND authors LIKE ?";
     public static final String FIND_ALL_BOOKS = "SELECT id, name, publishingYear, " +
             "publishingHouse, authors FROM books";

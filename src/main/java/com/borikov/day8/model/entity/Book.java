@@ -1,4 +1,4 @@
-package com.borikov.day8.entity;
+package com.borikov.day8.model.entity;
 
 import java.util.Collections;
 import java.util.List;

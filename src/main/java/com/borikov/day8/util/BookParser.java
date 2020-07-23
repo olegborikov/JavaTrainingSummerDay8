@@ -7,6 +7,17 @@ import java.util.stream.Collectors;
 
 public class BookParser {
     private static final String COMMA = ", ";
+    private static final int DEFAULT_VALUE = -1;
+
+    public int parsePublishingYear(String publishingYear) {
+        int publishingYearParsed;
+        try {
+            publishingYearParsed = Integer.parseInt(publishingYear);
+        } catch (NumberFormatException e) {
+            publishingYearParsed = DEFAULT_VALUE;
+        }
+        return publishingYearParsed;
+    }
 
     public List<String> parseStringToList(String authors) {
         String[] authorsArr = authors.split(COMMA);

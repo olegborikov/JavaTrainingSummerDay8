@@ -1,36 +1,32 @@
 package com.borikov.day8.pool;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public class ConnectionPool {
-    private static final String DATASOURCE_NAME = "java:comp/env/jdbc/day8";
-    private static ConnectionPool INSTANCE = null;
+    private static final String URL = "jdbc:mysql://localhost:3306/jtsday8?useUnicode=true&serverTimezone=UTC";
+    private static final String USERNAME = "root";
+    private static final String PASSWORD = "root";
+    private static final HikariConfig config = new HikariConfig();
+    private static final HikariDataSource dataSource;
 
-    public static ConnectionPool getInstance() {
-        if (INSTANCE == null)
-            INSTANCE = new ConnectionPool();
-        return INSTANCE;
+    static {
+        config.setJdbcUrl(URL);
+        config.setUsername(USERNAME);
+        config.setPassword(PASSWORD);
+        config.addDataSourceProperty("cachePrepStmts", "true");
+        config.addDataSourceProperty("prepStmtCacheSize", "250");
+        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        dataSource = new HikariDataSource(config);
     }
-
 
     private ConnectionPool() {
     }
 
-    public Connection getConnection() throws SQLException {
-        DataSource dataSource = null;
-        Connection connection;
-        try {
-            Context context = new InitialContext();
-            dataSource = (DataSource) context.lookup(DATASOURCE_NAME);
-        } catch (NamingException e) {
-            System.out.println("Naming error");
-        }
-        connection= dataSource.getConnection();
-        return connection;
+    public static Connection getConnection() throws SQLException {
+        return dataSource.getConnection();
     }
 }

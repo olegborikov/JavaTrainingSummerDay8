@@ -1,6 +1,6 @@
-package com.borikov.day8.dao;
+package com.borikov.day8.model.dao;
 
-import com.borikov.day8.entity.Book;
+import com.borikov.day8.model.entity.Book;
 import com.borikov.day8.exception.DaoException;
 
 import java.sql.ResultSet;
