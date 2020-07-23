@@ -5,25 +5,28 @@ import com.borikov.day8.dao.SqlQuery;
 import com.borikov.day8.entity.Book;
 import com.borikov.day8.exception.DaoException;
 import com.borikov.day8.pool.BookDataSource;
+import com.borikov.day8.pool.ConnectionPool;
 import com.borikov.day8.util.BookCreator;
 import com.borikov.day8.util.BookParser;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class BookDaoImpl implements BookDao {
     @Override
-    public void add(Book book) throws DaoException {
+    public boolean add(Book book) throws DaoException {
+        boolean result;
         try (Connection connection = BookDataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(SqlQuery.ADD_BOOK, Statement.RETURN_GENERATED_KEYS)) {
             BookParser bookParser = new BookParser();
+            String authorsParsed = bookParser.parseListToString(book.getAuthors());
             statement.setString(1, book.getName());
             statement.setInt(2, book.getPublishingYear());
             statement.setString(3, book.getPublishingHouse());
-            statement.setString(4, bookParser.parseListToString(book.getAuthors()));
-            statement.executeUpdate();
+            statement.setString(4, authorsParsed);
+            int rows = statement.executeUpdate();
+            result = rows > 0;
             ResultSet generatedKeys = statement.getGeneratedKeys();
             if (generatedKeys.next()) {
                 book.setBookId(generatedKeys.getLong(1));
@@ -31,10 +34,12 @@ public class BookDaoImpl implements BookDao {
         } catch (SQLException e) {
             throw new DaoException("Adding book error", e);
         }
+        return result;
     }
 
     @Override
-    public void remove(Book book) throws DaoException {
+    public boolean remove(Book book) throws DaoException {
+        boolean result;
         try (Connection connection = BookDataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(SqlQuery.REMOVE_BOOK)) {
             BookParser bookParser = new BookParser();
@@ -42,16 +47,18 @@ public class BookDaoImpl implements BookDao {
             statement.setInt(2, book.getPublishingYear());
             statement.setString(3, book.getPublishingHouse());
             statement.setString(4, bookParser.parseListToString(book.getAuthors()));
-            statement.executeUpdate();
+            int rows = statement.executeUpdate();
+            result = rows > 0;
         } catch (SQLException e) {
             throw new DaoException("Removing book error", e);
         }
+        return result;
     }
 
     @Override
     public List<Book> findAll() throws DaoException {
         List<Book> books = new ArrayList<>();
-        try (Connection connection = BookDataSource.getConnection();
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(SqlQuery.FIND_ALL_BOOKS)) {
             while (resultSet.next()) {

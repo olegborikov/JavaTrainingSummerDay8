@@ -8,9 +8,9 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface BookDao {
-    void add(Book book) throws DaoException;
+    boolean add(Book book) throws DaoException;
 
-    void remove(Book book) throws DaoException;
+    boolean remove(Book book) throws DaoException;
 
     List<Book> findAll() throws DaoException;
 

@@ -6,14 +6,16 @@ import com.borikov.day8.entity.Book;
 import com.borikov.day8.exception.DaoException;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
         try {
             BookDao bookDao = new BookDaoImpl();
-            Book book1 = new Book(25, "1", 1, "1", Arrays.asList("1", "2"));
-            bookDao.add(book1);
-            System.out.println(book1);
+            List<Book> books = bookDao.findAll();
+            for (Book book : books) {
+                System.out.println(book);
+            }
         } catch (DaoException e) {
             e.printStackTrace();
         }
