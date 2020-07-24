@@ -10,6 +10,7 @@ import com.borikov.day8.validator.BookValidator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class BookServiceImpl implements BookService {
     @Override
@@ -74,6 +75,11 @@ public class BookServiceImpl implements BookService {
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
+    }
+
+    @Override
+    public List<Book> findBookById(String id) throws ServiceException {
+        return null;
     }
 
     @Override
