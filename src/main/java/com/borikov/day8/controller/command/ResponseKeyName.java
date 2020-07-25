@@ -6,6 +6,7 @@ public class ResponseKeyName {
     public static final String CURRENT_BOOK = "currentBook";
     public static final String FILTERED_BOOKS = "filteredBooks";
     public static final String REMOVED_BOOK = "removedBook";
+    public static final String UPDATED_BOOK = "updatedBook";
     public static final String ERROR = "error";
 
     private ResponseKeyName() {

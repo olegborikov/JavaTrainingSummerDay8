@@ -7,26 +7,23 @@ import com.borikov.day8.exception.ServiceException;
 import com.borikov.day8.model.entity.Book;
 import com.borikov.day8.model.service.impl.BookServiceImpl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FindBookByIdCommand implements Command {
     @Override
-    public Map<String, List<Book>> execute(Map<String, String> data) {
-        List<Book> currentBook = new ArrayList<>();
+    public Map<String, Object> execute(Map<String, String> data) {
+        Optional<Book> currentBook = Optional.empty();
         String responseKey = ResponseKeyName.CURRENT_BOOK;
         if (data != null) {
             try {
-            BookServiceImpl bookService = new BookServiceImpl();
-            String id = data.get(DataKeyName.ID);
+                BookServiceImpl bookService = new BookServiceImpl();
+                String id = data.get(DataKeyName.ID);
                 currentBook = bookService.findBookById(id);
             } catch (ServiceException e) {
                 responseKey = ResponseKeyName.ERROR;
             }
         }
-        Map<String, List<Book>> response = new HashMap<>();
+        Map<String, Object> response = new HashMap<>();
         response.put(responseKey, currentBook);
         return response;
     }

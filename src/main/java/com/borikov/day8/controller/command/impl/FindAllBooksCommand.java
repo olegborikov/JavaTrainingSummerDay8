@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class FindAllBooksCommand implements Command {
     @Override
-    public Map<String, List<Book>> execute(Map<String, String> data) {
+    public Map<String, Object> execute(Map<String, String> data) {
         List<Book> books = new ArrayList<>();
         String responseKey = ResponseKeyName.ALL_BOOKS;
         try {
@@ -22,7 +22,7 @@ public class FindAllBooksCommand implements Command {
         } catch (ServiceException e) {
             responseKey = ResponseKeyName.ERROR;
         }
-        Map<String, List<Book>> response = new HashMap<>();
+        Map<String, Object> response = new HashMap<>();
         response.put(responseKey, books);
         return response;
     }

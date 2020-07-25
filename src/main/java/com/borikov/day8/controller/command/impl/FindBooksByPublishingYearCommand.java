@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class FindBooksByPublishingYearCommand implements Command {
     @Override
-    public Map<String, List<Book>> execute(Map<String, String> data) {
+    public Map<String, Object> execute(Map<String, String> data) {
         List<Book> filteredBooks = new ArrayList<>();
         String responseKey = ResponseKeyName.FILTERED_BOOKS;
         if (data != null) {
@@ -26,7 +26,7 @@ public class FindBooksByPublishingYearCommand implements Command {
                 responseKey = ResponseKeyName.ERROR;
             }
         }
-        Map<String, List<Book>> response = new HashMap<>();
+        Map<String, Object> response = new HashMap<>();
         response.put(responseKey, filteredBooks);
         return response;
     }

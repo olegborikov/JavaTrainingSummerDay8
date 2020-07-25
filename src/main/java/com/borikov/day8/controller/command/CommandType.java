@@ -5,6 +5,7 @@ import com.borikov.day8.controller.command.impl.*;
 public enum CommandType {
     ADD_BOOK(new AddBookCommand()),
     REMOVE_BOOK(new RemoveBookCommand()),
+    UPDATE_BOOK(new UpdateBookCommand()),
     FIND_ALL_BOOKS(new FindAllBooksCommand()),
     FIND_BOOK_BY_ID(new FindBookByIdCommand()),
     FIND_BOOKS_BY_NAME(new FindBooksByNameCommand()),

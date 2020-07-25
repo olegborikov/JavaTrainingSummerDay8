@@ -11,14 +11,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AddBookCommand implements Command {
+public class UpdateBookCommand implements Command {
     @Override
     public Map<String, Object> execute(Map<String, String> data) {
         BookServiceImpl bookService = new BookServiceImpl();
         boolean result = false;
-        String responseKey = ResponseKeyName.ADDED_BOOK;
+        String responseKey = ResponseKeyName.UPDATED_BOOK;
         if (data != null) {
             try {
+                String id = data.get(DataKeyName.ID);
                 String name = data.get(DataKeyName.NAME);
                 String publishingYear = data.get(DataKeyName.PUBLISHING_YEAR);
                 String publishingHouse = data.get(DataKeyName.PUBLISHING_HOUSE);
@@ -28,7 +29,7 @@ public class AddBookCommand implements Command {
                     authors.add(data.get(DataKeyName.AUTHOR + authorNumber));
                     authorNumber++;
                 }
-                result = bookService.addBook(name, publishingYear,
+                result = bookService.updateBook(id, name, publishingYear,
                         publishingHouse, authors);
             } catch (ServiceException e) {
                 responseKey = ResponseKeyName.ERROR;
