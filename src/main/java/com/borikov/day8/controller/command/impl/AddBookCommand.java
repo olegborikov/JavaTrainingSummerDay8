@@ -1,14 +1,8 @@
 package com.borikov.day8.controller.command.impl;
 
 import com.borikov.day8.controller.command.Command;
-import com.borikov.day8.controller.command.impl.constant.DataKeyName;
-import com.borikov.day8.controller.command.impl.constant.ResponseKeyName;
-import com.borikov.day8.exception.ServiceException;
 import com.borikov.day8.model.entity.Book;
-import com.borikov.day8.model.service.impl.BookServiceImpl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

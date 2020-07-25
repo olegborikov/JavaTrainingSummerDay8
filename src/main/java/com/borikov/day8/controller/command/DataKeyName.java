@@ -1,4 +1,4 @@
-package com.borikov.day8.controller.command.impl.constant;
+package com.borikov.day8.controller.command;
 
 public class DataKeyName {
     public static final String ID = "id";

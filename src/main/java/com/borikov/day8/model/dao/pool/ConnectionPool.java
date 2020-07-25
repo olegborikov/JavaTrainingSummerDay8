@@ -1,4 +1,4 @@
-package com.borikov.day8.pool;
+package com.borikov.day8.model.dao.pool;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;

@@ -6,5 +6,5 @@ import java.util.List;
 import java.util.Map;
 
 public interface Command {
-    Map<String, List<Book>> execute(Map<String, String> data);
+    Map<String, List<Book>> execute(Map<String, String> data);// TODO: 24.07.2020 String, Object
 }

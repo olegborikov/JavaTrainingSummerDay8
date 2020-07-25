@@ -1,4 +1,4 @@
-package com.borikov.day8.controller.command.impl.constant;
+package com.borikov.day8.controller.command;
 
 public class ResponseKeyName {
     public static final String ADDED_BOOK = "addedBook";
