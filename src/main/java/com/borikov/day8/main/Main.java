@@ -20,9 +20,9 @@ public class Main {
     public static void main(String[] args) {
         BookDao bookDao = new BookDaoImpl();
         List<Book> books = new ArrayList<>();
-
         try{
-            books = bookDao.findByPublishingYear(1);
+             books = bookDao.findByPublishingHouse("Минск");
+
         } catch (DaoException e) {
             e.printStackTrace();
         }

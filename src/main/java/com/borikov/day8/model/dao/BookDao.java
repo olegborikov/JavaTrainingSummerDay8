@@ -11,13 +11,13 @@ import java.util.Optional;
 public interface BookDao {
     boolean add(Book book) throws DaoException;
 
-    boolean remove(Book book) throws DaoException;
+    boolean remove(Long id) throws DaoException;
 
     boolean update(Book book) throws DaoException;
 
     List<Book> findAll() throws DaoException;
 
-    Optional<Book> findById(long id) throws DaoException;
+    Optional<Book> findById(Long id) throws DaoException;
 
     List<Book> findByName(String name) throws DaoException;
 

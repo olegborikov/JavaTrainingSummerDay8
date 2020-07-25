@@ -27,14 +27,14 @@ public class BookValidatorTest {
     @DataProvider(name = "isIdCorrectPositiveData")
     public Object[][] createIsIdCorrectPositiveData() {
         return new Object[][]{
-                {1},
-                {100_000},
-                {123}
+                {1L},
+                {100_000L},
+                {123L}
         };
     }
 
     @Test(dataProvider = "isIdCorrectPositiveData")
-    public void isIdCorrectPositiveTest(long id) {
+    public void isIdCorrectPositiveTest(Long id) {
         boolean actual = bookValidator.isIdCorrect(id);
         assertTrue(actual);
     }
@@ -42,14 +42,15 @@ public class BookValidatorTest {
     @DataProvider(name = "isIdCorrectNegativeData")
     public Object[][] createIsIdCorrectNegativeData() {
         return new Object[][]{
-                {0},
-                {100_001},
-                {-123}
+                {0L},
+                {100_001L},
+                {-123L},
+                null
         };
     }
 
     @Test(dataProvider = "isIdCorrectNegativeData")
-    public void isIdCorrectNegativeTest(long id) {
+    public void isIdCorrectNegativeTest(Long id) {
         boolean actual = bookValidator.isIdCorrect(id);
         assertFalse(actual);
     }

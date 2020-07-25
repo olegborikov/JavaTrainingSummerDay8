@@ -13,8 +13,11 @@ public class BookValidator {
     private static final int MIN_STRING_LENGTH = 1;
     private static final int MAX_AUTHORS_AMOUNT = 10;
 
-    public boolean isIdCorrect(long id) {
-        boolean result = id >= MIN_ID && id <= MAX_ID;
+    public boolean isIdCorrect(Long id) {
+        boolean result = false;
+        if (id != null) {
+            result = id >= MIN_ID && id <= MAX_ID;
+        }
         return result;
     }
 

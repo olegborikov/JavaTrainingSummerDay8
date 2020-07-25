@@ -11,13 +11,15 @@ public interface BookService {
                        String publishingHouse, List<String> authors)
             throws ServiceException;
 
-    boolean removeBook(String name, String publishingYear,
+    boolean removeBook(String id) throws ServiceException;
+
+    boolean updateBook(String id, String name, String publishingYear,
                           String publishingHouse, List<String> authors)
             throws ServiceException;
 
     List<Book> findAllBooks() throws ServiceException;
 
-    List<Book> findBookById(String id) throws ServiceException;
+    Optional<Book> findBookById(String id) throws ServiceException;
 
     List<Book> findBooksByName(String name) throws ServiceException;
 

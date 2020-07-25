@@ -30,8 +30,7 @@ public class BookServiceImpl implements BookService {
                 BookDaoImpl bookDao = new BookDaoImpl();
                 Book book = new Book(null, name, publishingYearParsed,
                         publishingHouse, authors);
-                bookDao.add(book);
-                result = true;
+                result = bookDao.add(book);
             } catch (DaoException e) {
                 throw new ServiceException(e);
             }
@@ -40,25 +39,42 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public boolean removeBook(String name, String publishingYear,
-                              String publishingHouse,
-                              List<String> authors)
+    public boolean removeBook(String id) throws ServiceException {
+        BookValidator bookValidator = new BookValidator();
+        BookParser bookParser = new BookParser();
+        boolean result = false;
+        Long idParsed = bookParser.parseId(id);
+        if (bookValidator.isIdCorrect(idParsed)) {
+            try {
+                BookDaoImpl bookDao = new BookDaoImpl();
+                result = bookDao.remove(idParsed);
+            } catch (DaoException e) {
+                throw new ServiceException(e);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public boolean updateBook(String id, String name, String publishingYear,
+                              String publishingHouse, List<String> authors)
             throws ServiceException {
         BookValidator bookValidator = new BookValidator();
         BookParser bookParser = new BookParser();
         boolean result = false;
         int publishingYearParsed =
                 bookParser.parsePublishingYear(publishingYear);
-        if (bookValidator.isPublishingYearCorrect(publishingYearParsed) &&
+        Long idParsed = bookParser.parseId(id);
+        if (bookValidator.isIdCorrect(idParsed) &&
+                bookValidator.isPublishingYearCorrect(publishingYearParsed) &&
                 bookValidator.isNameCorrect(name) &&
                 bookValidator.isPublishingHouseCorrect(publishingHouse) &&
                 bookValidator.isAuthorsCorrect(authors)) {
             try {
                 BookDaoImpl bookDao = new BookDaoImpl();
-                Book book = new Book(null, name, publishingYearParsed,
+                Book book = new Book(idParsed, name, publishingYearParsed,
                         publishingHouse, authors);
-                bookDao.remove(book);
-                result = true;
+                result = bookDao.update(book);
             } catch (DaoException e) {
                 throw new ServiceException(e);
             }
@@ -68,18 +84,31 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> findAllBooks() throws ServiceException {
+        List<Book> books;
         try {
             BookDaoImpl bookDao = new BookDaoImpl();
-            List<Book> books = bookDao.findAll();
-            return books;
+            books = bookDao.findAll();
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
+        return books;
     }
 
     @Override
-    public List<Book> findBookById(String id) throws ServiceException {
-        return null;
+    public Optional<Book> findBookById(String id) throws ServiceException {
+        BookValidator bookValidator = new BookValidator();
+        BookParser bookParser = new BookParser();
+        Long idParsed = bookParser.parseId(id);
+        Optional<Book> book = Optional.empty();
+        if(bookValidator.isIdCorrect(idParsed)){
+            try {
+                BookDaoImpl bookDao = new BookDaoImpl();
+                book = bookDao.findById(idParsed);
+            } catch (DaoException e) {
+                throw new ServiceException(e);
+            }
+        }
+        return book;
     }
 
     @Override
