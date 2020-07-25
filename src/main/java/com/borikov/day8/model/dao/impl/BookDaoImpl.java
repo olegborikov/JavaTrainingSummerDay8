@@ -13,46 +13,30 @@ import java.util.List;
 import java.util.Optional;
 
 public class BookDaoImpl implements BookDao {
-    private static final String ADD_BOOK =
-            "INSERT INTO books (name, publishing_year, " +
-                    "publishing_house, authors) VALUES (?, ?, ?, ?)";
-    private static final String REMOVE_BOOK_BY_ALL_PARAMETERS =
-            "DELETE FROM books WHERE name LIKE ? " +
-                    "AND publishing_year = ? AND publishing_house LIKE ?" +
-                    "AND authors LIKE ?";
-    private static final String UPDATE_BOOK_BY_ID =
-            "UPDATE books SET name = ?, publishing_year = ?," +
-                    " publishing_house = ?, authors = ? WHERE book_id = ?";
-    private static final String FIND_ALL_BOOKS =
-            "SELECT book_id, name, publishing_year, " +
-                    "publishing_house, authors FROM books";
-    private static final String FIND_BOOK_BY_ID =
-            "SELECT book_id, name, publishing_year, " +
-                    "publishing_house, authors FROM books WHERE book_id = ?";
-    private static final String FIND_BOOK_BY_NAME =
-            "SELECT book_id, name, publishing_year, " +
-                    "publishing_house, authors FROM books WHERE name LIKE ?";
-    private static final String FIND_BOOK_BY_PUBLISHING_YEAR =
-            "SELECT book_id, name, publishing_year, " +
-                    "publishing_house, authors FROM books WHERE publishing_year = ?";
-    private static final String FIND_BOOK_BY_PUBLISHING_HOUSE =
-            "SELECT book_id, name, publishing_year, " +
-                    "publishing_house, authors FROM books WHERE publishing_house LIKE ?";
-    private static final String FIND_BOOK_BY_AUTHOR =
-            "SELECT book_id, name, publishing_year, " +
-                    "publishing_house, authors FROM books WHERE authors LIKE ?";
-    private static final String SORT_BOOKS_BY_NAME =
-            "SELECT book_id, name, publishing_year, " +
-                    "publishing_house, authors FROM books ORDER BY name";
-    private static final String SORT_BOOKS_BY_PUBLISHING_YEAR =
-            "SELECT book_id, name, publishing_year, " +
-                    "publishing_house, authors FROM books ORDER BY publishing_year";
-    private static final String SORT_BOOKS_BY_PUBLISHING_HOUSE =
-            "SELECT book_id, name, publishing_year, " +
-                    "publishing_house, authors FROM books  ORDER BY publishing_house";
-    private static final String SORT_BOOKS_BY_AUTHORS =
-            "SELECT book_id, name, publishing_year, " +
-                    "publishing_house, authors FROM books ORDER BY CHAR_LENGTH(authors)";
+    private static final String ADD_BOOK = "INSERT INTO books " +
+            "(name, publishing_year, publishing_house, authors) VALUES (?, ?, ?, ?)";
+    private static final String REMOVE_BOOK_BY_ALL_PARAMETERS = "DELETE FROM books " +
+            "WHERE name LIKE ? AND publishing_year = ? " +
+            "AND publishing_house LIKE ? AND authors LIKE ?";
+    private static final String UPDATE_BOOK_BY_ID = "UPDATE books " +
+            "SET name = ?, publishing_year = ?, publishing_house = ?, authors = ? " +
+            "WHERE book_id = ?";
+    private static final String FIND_ALL_BOOKS = "SELECT book_id, name, " +
+            "publishing_year, publishing_house, authors FROM books";
+    private static final String FIND_BOOK_BY_ID = "SELECT book_id, name, " +
+            "publishing_year, publishing_house, authors FROM books WHERE book_id = ?";
+    private static final String FIND_BOOK_BY_NAME = "SELECT book_id, name, " +
+            "publishing_year, publishing_house, authors FROM books " +
+            "WHERE name LIKE ? ORDER BY name";
+    private static final String FIND_BOOK_BY_PUBLISHING_YEAR = "SELECT book_id, name, " +
+            "publishing_year, publishing_house, authors FROM books " +
+            "WHERE CAST(publishing_year AS CHAR(20)) LIKE ? ORDER BY publishing_year";
+    private static final String FIND_BOOK_BY_PUBLISHING_HOUSE = "SELECT book_id, name, " +
+            "publishing_year, publishing_house, authors FROM books " +
+            "WHERE publishing_house LIKE ? ORDER BY publishing_house";
+    private static final String FIND_BOOK_BY_AUTHOR = "SELECT book_id, name, " +
+            "publishing_year, publishing_house, authors FROM books " +
+            "WHERE authors LIKE ? ORDER BY CHAR_LENGTH(authors)";
     private static final String PERCENT = "%";
 
     @Override
@@ -101,9 +85,11 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public Book update(Book book) throws DaoException {
+    public boolean update(Book book) throws DaoException {
+        boolean result;
         try (Connection connection = ConnectionPool.getConnection();
-             PreparedStatement statement = connection.prepareStatement(UPDATE_BOOK_BY_ID)) {
+             PreparedStatement statement =
+                     connection.prepareStatement(UPDATE_BOOK_BY_ID)) {
             BookParser bookParser = new BookParser();
             String authorsParsed = bookParser.parseListToString(book.getAuthors());
             statement.setString(1, book.getName());
@@ -111,12 +97,12 @@ public class BookDaoImpl implements BookDao {
             statement.setString(3, book.getPublishingHouse());
             statement.setString(4, authorsParsed);
             statement.setLong(5, book.getBookId());
-            statement.executeUpdate();
-
+            int rows = statement.executeUpdate();
+            result = rows > 0;
         } catch (SQLException e) {
             throw new DaoException("Updating book error", e);
         }
-        return book;
+        return result;
     }
 
     @Override
@@ -140,7 +126,8 @@ public class BookDaoImpl implements BookDao {
         Optional<Book> currentBook = Optional.empty();
         ResultSet resultSet = null;
         try (Connection connection = ConnectionPool.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_BOOK_BY_ID)) {
+             PreparedStatement statement =
+                     connection.prepareStatement(FIND_BOOK_BY_ID)) {
             statement.setLong(1, id);
             resultSet = statement.executeQuery();
             if (resultSet.next()) {
@@ -160,8 +147,9 @@ public class BookDaoImpl implements BookDao {
         List<Book> books = new ArrayList<>();
         ResultSet resultSet = null;
         try (Connection connection = ConnectionPool.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_BOOK_BY_NAME)) {
-            statement.setString(1, name);
+             PreparedStatement statement =
+                     connection.prepareStatement(FIND_BOOK_BY_NAME)) {
+            statement.setString(1, PERCENT + name + PERCENT);
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Book book = createBookFromResultSet(resultSet);
@@ -180,8 +168,9 @@ public class BookDaoImpl implements BookDao {
         List<Book> books = new ArrayList<>();
         ResultSet resultSet = null;
         try (Connection connection = ConnectionPool.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_BOOK_BY_PUBLISHING_YEAR)) {
-            statement.setInt(1, publishingYear);
+             PreparedStatement statement =
+                     connection.prepareStatement(FIND_BOOK_BY_PUBLISHING_YEAR)) {
+            statement.setString(1, PERCENT + publishingYear + PERCENT);
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Book book = createBookFromResultSet(resultSet);
@@ -200,8 +189,9 @@ public class BookDaoImpl implements BookDao {
         List<Book> books = new ArrayList<>();
         ResultSet resultSet = null;
         try (Connection connection = ConnectionPool.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_BOOK_BY_PUBLISHING_HOUSE)) {
-            statement.setString(1, publishingHouse);
+             PreparedStatement statement =
+                     connection.prepareStatement(FIND_BOOK_BY_PUBLISHING_HOUSE)) {
+            statement.setString(1, PERCENT + publishingHouse + PERCENT);
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Book book = createBookFromResultSet(resultSet);
@@ -220,7 +210,8 @@ public class BookDaoImpl implements BookDao {
         List<Book> books = new ArrayList<>();
         ResultSet resultSet = null;
         try (Connection connection = ConnectionPool.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_BOOK_BY_AUTHOR)) {
+             PreparedStatement statement =
+                     connection.prepareStatement(FIND_BOOK_BY_AUTHOR)) {
             statement.setString(1, PERCENT + author + PERCENT);
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -231,70 +222,6 @@ public class BookDaoImpl implements BookDao {
             throw new DaoException("Finding books by author error", e);
         } finally {
             closeResultSet(resultSet);
-        }
-        return books;
-    }
-
-    @Override
-    public List<Book> sortByName() throws DaoException {
-        List<Book> books = new ArrayList<>();
-        try (Connection connection = ConnectionPool.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(SORT_BOOKS_BY_NAME)) {
-            while (resultSet.next()) {
-                Book book = createBookFromResultSet(resultSet);
-                books.add(book);
-            }
-        } catch (SQLException e) {
-            throw new DaoException("Sorting all books error", e);
-        }
-        return books;
-    }
-
-    @Override
-    public List<Book> sortByPublishingYear() throws DaoException {
-        List<Book> books = new ArrayList<>();
-        try (Connection connection = ConnectionPool.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(SORT_BOOKS_BY_PUBLISHING_YEAR)) {
-            while (resultSet.next()) {
-                Book book = createBookFromResultSet(resultSet);
-                books.add(book);
-            }
-        } catch (SQLException e) {
-            throw new DaoException("Finding all books error", e);
-        }
-        return books;
-    }
-
-    @Override
-    public List<Book> sortByPublishingHouse() throws DaoException {
-        List<Book> books = new ArrayList<>();
-        try (Connection connection = ConnectionPool.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(SORT_BOOKS_BY_PUBLISHING_HOUSE)) {
-            while (resultSet.next()) {
-                Book book = createBookFromResultSet(resultSet);
-                books.add(book);
-            }
-        } catch (SQLException e) {
-            throw new DaoException("Finding all books error", e);
-        }
-        return books;
-    }
-
-    @Override
-    public List<Book> sortByAuthors() throws DaoException {
-        List<Book> books = new ArrayList<>();
-        try (Connection connection = ConnectionPool.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(SORT_BOOKS_BY_AUTHORS)) {
-            while (resultSet.next()) {
-                Book book = createBookFromResultSet(resultSet);
-                books.add(book);
-            }
-        } catch (SQLException e) {
-            throw new DaoException("Finding all books error", e);
         }
         return books;
     }

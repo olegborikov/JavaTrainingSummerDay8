@@ -22,7 +22,7 @@ public class Main {
         List<Book> books = new ArrayList<>();
 
         try{
-            books = bookDao.sortByPublishingHouse();
+            books = bookDao.findByPublishingYear(1);
         } catch (DaoException e) {
             e.printStackTrace();
         }

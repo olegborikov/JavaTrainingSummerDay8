@@ -13,7 +13,7 @@ public interface BookDao {
 
     boolean remove(Book book) throws DaoException;
 
-    Book update(Book book) throws DaoException;
+    boolean update(Book book) throws DaoException;
 
     List<Book> findAll() throws DaoException;
 
@@ -27,21 +27,13 @@ public interface BookDao {
 
     List<Book> findByAuthor(String author) throws DaoException;
 
-    List<Book> sortByName() throws DaoException;
-
-    List<Book> sortByPublishingYear() throws DaoException;
-
-    List<Book> sortByPublishingHouse() throws DaoException;
-
-    List<Book> sortByAuthors() throws DaoException;
-
     default void closeResultSet(ResultSet resultSet) {
         try {
             if (resultSet != null) {
                 resultSet.close();
             }
         } catch (SQLException e) {
-            System.err.println("Error while resultSet closing");
+            System.err.println("Error while closing resultSet");
         }
     }
 }
