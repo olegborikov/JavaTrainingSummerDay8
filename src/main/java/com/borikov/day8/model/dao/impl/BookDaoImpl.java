@@ -63,21 +63,6 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public boolean remove(Long id) throws DaoException {
-        boolean result;
-        try (Connection connection = ConnectionPool.getConnection();
-             PreparedStatement statement =
-                     connection.prepareStatement(REMOVE_BOOK_BY_ID)) {
-            statement.setLong(1, id);
-            int rows = statement.executeUpdate();
-            result = rows > 0;
-        } catch (SQLException e) {
-            throw new DaoException("Removing book error", e);
-        }
-        return result;
-    }
-
-    @Override
     public boolean update(Book book) throws DaoException {
         boolean result;
         try (Connection connection = ConnectionPool.getConnection();
@@ -94,6 +79,21 @@ public class BookDaoImpl implements BookDao {
             result = rows > 0;
         } catch (SQLException e) {
             throw new DaoException("Updating book error", e);
+        }
+        return result;
+    }
+
+    @Override
+    public boolean remove(Long id) throws DaoException {
+        boolean result;
+        try (Connection connection = ConnectionPool.getConnection();
+             PreparedStatement statement =
+                     connection.prepareStatement(REMOVE_BOOK_BY_ID)) {
+            statement.setLong(1, id);
+            int rows = statement.executeUpdate();
+            result = rows > 0;
+        } catch (SQLException e) {
+            throw new DaoException("Removing book error", e);
         }
         return result;
     }

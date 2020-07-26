@@ -39,23 +39,6 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public boolean removeBook(String id) throws ServiceException {
-        BookValidator bookValidator = new BookValidator();
-        BookParser bookParser = new BookParser();
-        boolean result = false;
-        Long idParsed = bookParser.parseId(id);
-        if (bookValidator.isIdCorrect(idParsed)) {
-            try {
-                BookDaoImpl bookDao = new BookDaoImpl();
-                result = bookDao.remove(idParsed);
-            } catch (DaoException e) {
-                throw new ServiceException(e);
-            }
-        }
-        return result;
-    }
-
-    @Override
     public boolean updateBook(String id, String name, String publishingYear,
                               String publishingHouse, List<String> authors)
             throws ServiceException {
@@ -75,6 +58,23 @@ public class BookServiceImpl implements BookService {
                 Book book = new Book(idParsed, name, publishingYearParsed,
                         publishingHouse, authors);
                 result = bookDao.update(book);
+            } catch (DaoException e) {
+                throw new ServiceException(e);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public boolean removeBook(String id) throws ServiceException {
+        BookValidator bookValidator = new BookValidator();
+        BookParser bookParser = new BookParser();
+        boolean result = false;
+        Long idParsed = bookParser.parseId(id);
+        if (bookValidator.isIdCorrect(idParsed)) {
+            try {
+                BookDaoImpl bookDao = new BookDaoImpl();
+                result = bookDao.remove(idParsed);
             } catch (DaoException e) {
                 throw new ServiceException(e);
             }
@@ -113,9 +113,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> findBooksByName(String name) throws ServiceException {
-        BookValidator bookValidator = new BookValidator();
         List<Book> filteredBooks = new ArrayList<>();
-        if (bookValidator.isNameCorrect(name)) {
+        if (name != null && !(name.isBlank() && !name.isEmpty())) {// TODO: 26.07.2020 to validator
             try {
                 BookDaoImpl bookDao = new BookDaoImpl();
                 filteredBooks = bookDao.findByName(name);
@@ -149,9 +148,8 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<Book> findBooksByPublishingHouse(String publishingHouse)
             throws ServiceException {
-        BookValidator bookValidator = new BookValidator();
         List<Book> filteredBooks = new ArrayList<>();
-        if (bookValidator.isPublishingHouseCorrect(publishingHouse)) {
+        if (publishingHouse != null && !(publishingHouse.isBlank() && !publishingHouse.isEmpty())) {
             try {
                 BookDaoImpl bookDao = new BookDaoImpl();
                 filteredBooks = bookDao.findByPublishingHouse(publishingHouse);
@@ -164,9 +162,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> findBooksByAuthor(String author) throws ServiceException {
-        BookValidator bookValidator = new BookValidator();
         List<Book> filteredBooks = new ArrayList<>();
-        if (bookValidator.isAuthorCorrect(author)) {
+        if (author != null && !(author.isBlank() && !author.isEmpty())) {
             try {
                 BookDaoImpl bookDao = new BookDaoImpl();
                 filteredBooks = bookDao.findByAuthor(author);

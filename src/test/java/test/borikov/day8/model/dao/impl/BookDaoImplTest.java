@@ -48,7 +48,7 @@ public class BookDaoImplTest {
     }
 
     @Test(priority = 2)
-    public void updateTest() {
+    public void updatePositiveTest() {
         try {
             List<Book> books = bookDao.findAll();
             long id = books.get(books.size() - 1).getBookId();
@@ -63,8 +63,21 @@ public class BookDaoImplTest {
         }
     }
 
+    @Test
+    public void updateNegativeTest() {
+        try {
+            List<Book> books = bookDao.findAll();
+            long id = books.get(books.size() - 1).getBookId();
+            Book newBook = new Book(id + 1, "Qwe", 1920, "Piter", new ArrayList<>());
+            boolean actual = bookDao.update(newBook);
+            assertFalse(actual);
+        } catch (DaoException e) {
+            fail("Incorrect input");
+        }
+    }
+
     @Test(priority = 3)
-    public void removeTest() {
+    public void removePositiveTest() {
         try {
             List<Book> books = bookDao.findAll();
             long id = books.get(books.size() - 1).getBookId();
@@ -72,6 +85,18 @@ public class BookDaoImplTest {
             List<Book> actual = bookDao.findAll();
             List<Book> expected = bookStorage.getCreatedBooks();
             assertEquals(actual, expected);
+        } catch (DaoException e) {
+            fail("Incorrect input");
+        }
+    }
+
+    @Test
+    public void removeNegativeTest() {
+        try {
+            List<Book> books = bookDao.findAll();
+            long id = books.get(books.size() - 1).getBookId();
+            boolean actual = bookDao.remove(id + 1);
+            assertFalse(actual);
         } catch (DaoException e) {
             fail("Incorrect input");
         }
