@@ -45,7 +45,7 @@ public class BookDaoImpl implements BookDao {
              PreparedStatement statement = connection.prepareStatement(ADD_BOOK,
                      Statement.RETURN_GENERATED_KEYS)) {
             BookParser bookParser = new BookParser();
-            String authorsParsed = bookParser.parseListToString(book.getAuthors());
+            String authorsParsed = bookParser.parseAuthorsToString(book.getAuthors());
             statement.setString(1, book.getName());
             statement.setInt(2, book.getPublishingYear());
             statement.setString(3, book.getPublishingHouse());
@@ -84,7 +84,7 @@ public class BookDaoImpl implements BookDao {
              PreparedStatement statement =
                      connection.prepareStatement(UPDATE_BOOK_BY_ID)) {
             BookParser bookParser = new BookParser();
-            String authorsParsed = bookParser.parseListToString(book.getAuthors());
+            String authorsParsed = bookParser.parseAuthorsToString(book.getAuthors());
             statement.setString(1, book.getName());
             statement.setInt(2, book.getPublishingYear());
             statement.setString(3, book.getPublishingHouse());
@@ -226,7 +226,7 @@ public class BookDaoImpl implements BookDao {
         String publishingHouse = resultSet.getString(ColumnName.PUBLISHING_HOUSE);
         String authors = resultSet.getString(ColumnName.AUTHORS);
         BookParser bookParser = new BookParser();
-        List<String> authorsParsed = bookParser.parseStringToList(authors);
+        List<String> authorsParsed = bookParser.parseAuthorsToList(authors);
         Book book = new Book(id, name, publishingYear, publishingHouse, authorsParsed);
         return book;
     }

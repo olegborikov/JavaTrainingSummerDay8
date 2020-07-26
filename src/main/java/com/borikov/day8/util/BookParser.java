@@ -29,13 +29,16 @@ public class BookParser {
         return publishingYearParsed;
     }
 
-    public List<String> parseStringToList(String authors) {
-        String[] authorsArr = authors.split(COMMA);
-        List<String> authorsParsed = new ArrayList<>(Arrays.asList(authorsArr));
+    public List<String> parseAuthorsToList(String authors) {
+        List<String> authorsParsed = new ArrayList<>();
+        if (!authors.isBlank()) {
+            String[] authorsArr = authors.split(COMMA);
+            authorsParsed = new ArrayList<>(Arrays.asList(authorsArr));
+        }
         return authorsParsed;
     }
 
-    public String parseListToString(List<String> authors) {
+    public String parseAuthorsToString(List<String> authors) {
         String authorsParsed = authors.stream()
                 .map(a -> String.valueOf(a))
                 .collect(Collectors.joining(COMMA));
