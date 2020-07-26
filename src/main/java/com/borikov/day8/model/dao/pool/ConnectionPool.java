@@ -7,7 +7,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class ConnectionPool {
-    private static final String URL = "jdbc:mysql://localhost:3306/jtsday8?useUnicode=true&serverTimezone=UTC";
+    private static final String URL =
+            "jdbc:mysql://localhost:3306/jtsday8?useUnicode=true&serverTimezone=UTC";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "root";
     private static final HikariConfig config = new HikariConfig();

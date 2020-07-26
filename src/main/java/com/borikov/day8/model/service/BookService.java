@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface BookService {
     boolean addBook(String name, String publishingYear,
-                       String publishingHouse, List<String> authors)
+                    String publishingHouse, List<String> authors)
             throws ServiceException;
 
     boolean updateBook(String id, String name, String publishingYear,
@@ -23,9 +23,12 @@ public interface BookService {
 
     List<Book> findBooksByName(String name) throws ServiceException;
 
-    List<Book> findBooksByPublishingYear(String publishingYear) throws ServiceException;
+    List<Book> findBooksByPublishingYearInterval(
+            String publishingYearBegin, String publishingYearEnd)
+            throws ServiceException;
 
-    List<Book> findBooksByPublishingHouse(String publishingHouse) throws ServiceException;
+    List<Book> findBooksByPublishingHouse(
+            String publishingHouse) throws ServiceException;
 
     List<Book> findBooksByAuthor(String author) throws ServiceException;
 }

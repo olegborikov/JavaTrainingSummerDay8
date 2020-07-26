@@ -9,7 +9,7 @@ public enum CommandType {
     FIND_ALL_BOOKS(new FindAllBooksCommand()),
     FIND_BOOK_BY_ID(new FindBookByIdCommand()),
     FIND_BOOKS_BY_NAME(new FindBooksByNameCommand()),
-    FIND_BOOKS_BY_PUBLISHING_YEAR(new FindBooksByPublishingYearCommand()),
+    FIND_BOOKS_BY_PUBLISHING_YEAR_INTERVAL(new FindBooksByPublishingYearIntervalCommand()),
     FIND_BOOKS_BY_PUBLISHING_HOUSE(new FindBooksByPublishingHouseCommand()),
     FIND_BOOKS_BY_AUTHOR(new FindBooksByAuthorCommand());
     private final Command command;

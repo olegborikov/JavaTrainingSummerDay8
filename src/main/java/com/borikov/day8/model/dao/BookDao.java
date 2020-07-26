@@ -13,15 +13,16 @@ public interface BookDao {
 
     boolean update(Book book) throws DaoException;
 
-    boolean remove(Long id) throws DaoException;
+    boolean remove(long id) throws DaoException;
 
     List<Book> findAll() throws DaoException;
 
-    Optional<Book> findById(Long id) throws DaoException;
+    Optional<Book> findById(long id) throws DaoException;
 
     List<Book> findByName(String name) throws DaoException;
 
-    List<Book> findByPublishingYear(int publishingYear) throws DaoException;
+    List<Book> findByPublishingYearInterval(
+            int publishingYearBegin, int publishingYearEnd) throws DaoException;
 
     List<Book> findByPublishingHouse(String publishingHouse) throws DaoException;
 
@@ -33,7 +34,7 @@ public interface BookDao {
                 resultSet.close();
             }
         } catch (SQLException e) {
-            System.err.println("Error while closing resultSet");
+            System.out.println("Error while closing resultSet");
         }
     }
 }

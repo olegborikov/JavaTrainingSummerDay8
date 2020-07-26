@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FindBooksByPublishingYearCommand implements Command {
+public class FindBooksByPublishingYearIntervalCommand implements Command {
     @Override
     public Map<String, Object> execute(Map<String, String> data) {
         List<Book> filteredBooks = new ArrayList<>();
@@ -20,8 +20,9 @@ public class FindBooksByPublishingYearCommand implements Command {
         if (data != null) {
             try {
                 BookServiceImpl bookService = new BookServiceImpl();
-                String publishingYear = data.get(DataKeyName.PUBLISHING_YEAR);
-                filteredBooks = bookService.findBooksByPublishingYear(publishingYear);
+                String publishingYearBegin = data.get(DataKeyName.PUBLISHING_YEAR_INTERVAL_BEGIN);
+                String publishingYearEnd = data.get(DataKeyName.PUBLISHING_YEAR_INTERVAL_END);
+                filteredBooks = bookService.findBooksByPublishingYearInterval(publishingYearBegin, publishingYearEnd);
             } catch (ServiceException e) {
                 responseKey = ResponseKeyName.ERROR;
             }

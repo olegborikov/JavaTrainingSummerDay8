@@ -36,6 +36,16 @@ public class BookValidator {
         return result;
     }
 
+    public boolean isPublishingYearIntervalCorrect(
+            int publishingYearBegin, int publishingYearEnd) {
+        boolean result = false;
+        if (publishingYearBegin <= publishingYearEnd) {
+            result = isPublishingYearCorrect(publishingYearBegin) &&
+                    isPublishingYearCorrect(publishingYearEnd);
+        }
+        return result;
+    }
+
     public boolean isPublishingHouseCorrect(String publishingHouse) {
         boolean result = false;
         if (publishingHouse != null && !publishingHouse.isBlank()) {
@@ -59,6 +69,14 @@ public class BookValidator {
         if (author != null && !author.isBlank()) {
             result = author.length() >= MIN_STRING_LENGTH &&
                     author.length() <= MAX_STRING_LENGTH;
+        }
+        return result;
+    }
+
+    public boolean isRequestCorrect(String request) {
+        boolean result = false;
+        if (request != null && !(request.isBlank() && !request.isEmpty())) {
+            result = request.length() <= MAX_STRING_LENGTH;
         }
         return result;
     }

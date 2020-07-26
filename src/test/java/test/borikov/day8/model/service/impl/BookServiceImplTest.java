@@ -1,3 +1,4 @@
+/*
 package test.borikov.day8.model.service.impl;
 
 import com.borikov.day8.exception.ServiceException;
@@ -596,4 +597,4 @@ public class BookServiceImplTest {
             fail("Incorrect input");
         }
     }
-}
+}*/

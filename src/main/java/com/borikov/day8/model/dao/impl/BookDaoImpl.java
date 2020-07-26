@@ -27,12 +27,14 @@ public class BookDaoImpl implements BookDao {
     private static final String FIND_BOOKS_BY_NAME = "SELECT book_id, name, " +
             "publishing_year, publishing_house, authors FROM books " +
             "WHERE name LIKE ? ORDER BY name";
-    private static final String FIND_BOOKS_BY_PUBLISHING_YEAR = "SELECT book_id, name, " +
-            "publishing_year, publishing_house, authors FROM books " +
-            "WHERE CAST(publishing_year AS CHAR(20)) LIKE ? ORDER BY publishing_year";
-    private static final String FIND_BOOKS_BY_PUBLISHING_HOUSE = "SELECT book_id, name, " +
-            "publishing_year, publishing_house, authors FROM books " +
-            "WHERE publishing_house LIKE ? ORDER BY publishing_house";
+    private static final String FIND_BOOKS_BY_PUBLISHING_YEAR_INTERVAL =
+            "SELECT book_id, name, publishing_year, publishing_house, authors " +
+                    "FROM books WHERE publishing_year >= ? AND publishing_year <= ? " +
+                    "ORDER BY publishing_year";
+    private static final String FIND_BOOKS_BY_PUBLISHING_HOUSE =
+            "SELECT book_id, name, publishing_year, publishing_house, authors " +
+                    "FROM books WHERE publishing_house LIKE ? " +
+                    "ORDER BY publishing_house";
     private static final String FIND_BOOKS_BY_AUTHOR = "SELECT book_id, name, " +
             "publishing_year, publishing_house, authors FROM books " +
             "WHERE authors LIKE ? ORDER BY CHAR_LENGTH(authors)";
@@ -84,7 +86,7 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public boolean remove(Long id) throws DaoException {
+    public boolean remove(long id) throws DaoException {
         boolean result;
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement statement =
@@ -115,7 +117,7 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public Optional<Book> findById(Long id) throws DaoException {
+    public Optional<Book> findById(long id) throws DaoException {
         Optional<Book> currentBook = Optional.empty();
         ResultSet resultSet = null;
         try (Connection connection = ConnectionPool.getConnection();
@@ -157,20 +159,23 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public List<Book> findByPublishingYear(int publishingYear) throws DaoException {
+    public List<Book> findByPublishingYearInterval(
+            int publishingYearBegin, int publishingYearEnd)
+            throws DaoException {
         List<Book> books = new ArrayList<>();
         ResultSet resultSet = null;
         try (Connection connection = ConnectionPool.getConnection();
-             PreparedStatement statement =
-                     connection.prepareStatement(FIND_BOOKS_BY_PUBLISHING_YEAR)) {
-            statement.setString(1, PERCENT + publishingYear + PERCENT);
+             PreparedStatement statement = connection.prepareStatement(
+                     FIND_BOOKS_BY_PUBLISHING_YEAR_INTERVAL)) {
+            statement.setInt(1, publishingYearBegin);
+            statement.setInt(2, publishingYearEnd);
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Book book = createBookFromResultSet(resultSet);
                 books.add(book);
             }
         } catch (SQLException e) {
-            throw new DaoException("Finding books by publishing year error", e);
+            throw new DaoException("Finding books by publishing year interval error", e);
         } finally {
             closeResultSet(resultSet);
         }
@@ -220,7 +225,7 @@ public class BookDaoImpl implements BookDao {
     }
 
     private Book createBookFromResultSet(ResultSet resultSet) throws SQLException {
-        Long id = resultSet.getLong(ColumnName.BOOK_ID);
+        long id = resultSet.getLong(ColumnName.BOOK_ID);
         String name = resultSet.getString(ColumnName.NAME);
         int publishingYear = resultSet.getInt(ColumnName.PUBLISHING_YEAR);
         String publishingHouse = resultSet.getString(ColumnName.PUBLISHING_HOUSE);

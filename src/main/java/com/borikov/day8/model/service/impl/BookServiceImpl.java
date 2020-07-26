@@ -47,7 +47,7 @@ public class BookServiceImpl implements BookService {
         boolean result = false;
         int publishingYearParsed =
                 bookParser.parsePublishingYear(publishingYear);
-        Long idParsed = bookParser.parseId(id);
+        long idParsed = bookParser.parseId(id);
         if (bookValidator.isIdCorrect(idParsed) &&
                 bookValidator.isPublishingYearCorrect(publishingYearParsed) &&
                 bookValidator.isNameCorrect(name) &&
@@ -98,9 +98,9 @@ public class BookServiceImpl implements BookService {
     public Optional<Book> findBookById(String id) throws ServiceException {
         BookValidator bookValidator = new BookValidator();
         BookParser bookParser = new BookParser();
-        Long idParsed = bookParser.parseId(id);
+        long idParsed = bookParser.parseId(id);
         Optional<Book> book = Optional.empty();
-        if(bookValidator.isIdCorrect(idParsed)){
+        if (bookValidator.isIdCorrect(idParsed)) {
             try {
                 BookDaoImpl bookDao = new BookDaoImpl();
                 book = bookDao.findById(idParsed);
@@ -113,8 +113,9 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> findBooksByName(String name) throws ServiceException {
+        BookValidator bookValidator = new BookValidator();
         List<Book> filteredBooks = new ArrayList<>();
-        if (name != null && !(name.isBlank() && !name.isEmpty())) {// TODO: 26.07.2020 to validator
+        if (bookValidator.isRequestCorrect(name)) {
             try {
                 BookDaoImpl bookDao = new BookDaoImpl();
                 filteredBooks = bookDao.findByName(name);
@@ -126,18 +127,22 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> findBooksByPublishingYear(String publishingYear)
+    public List<Book> findBooksByPublishingYearInterval(
+            String publishingYearBegin, String publishingYearEnd)
             throws ServiceException {
         BookValidator bookValidator = new BookValidator();
         BookParser bookParser = new BookParser();
         List<Book> filteredBooks = new ArrayList<>();
-        int publishingYearParsed =
-                bookParser.parsePublishingYear(publishingYear);
-        if (bookValidator.isPublishingYearCorrect(publishingYearParsed)) {
+        int publishingYearBeginParsed =
+                bookParser.parsePublishingYear(publishingYearBegin);
+        int publishingYearEndParsed =
+                bookParser.parsePublishingYear(publishingYearEnd);
+        if (bookValidator.isPublishingYearIntervalCorrect(publishingYearBeginParsed, publishingYearEndParsed)) {
             try {
                 BookDaoImpl bookDao = new BookDaoImpl();
                 filteredBooks =
-                        bookDao.findByPublishingYear(publishingYearParsed);
+                        bookDao.findByPublishingYearInterval(
+                                publishingYearBeginParsed, publishingYearEndParsed);
             } catch (DaoException e) {
                 throw new ServiceException(e);
             }
@@ -148,8 +153,9 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<Book> findBooksByPublishingHouse(String publishingHouse)
             throws ServiceException {
+        BookValidator bookValidator = new BookValidator();
         List<Book> filteredBooks = new ArrayList<>();
-        if (publishingHouse != null && !(publishingHouse.isBlank() && !publishingHouse.isEmpty())) {
+        if (bookValidator.isRequestCorrect(publishingHouse)) {
             try {
                 BookDaoImpl bookDao = new BookDaoImpl();
                 filteredBooks = bookDao.findByPublishingHouse(publishingHouse);
@@ -162,8 +168,9 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> findBooksByAuthor(String author) throws ServiceException {
+        BookValidator bookValidator = new BookValidator();
         List<Book> filteredBooks = new ArrayList<>();
-        if (author != null && !(author.isBlank() && !author.isEmpty())) {
+        if (bookValidator.isRequestCorrect(author)) {
             try {
                 BookDaoImpl bookDao = new BookDaoImpl();
                 filteredBooks = bookDao.findByAuthor(author);

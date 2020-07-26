@@ -10,7 +10,8 @@ public class Book {
     private String publishingHouse;
     private List<String> authors;
 
-    public Book(Long bookId, String name, int publishingYear, String publishingHouse, List<String> authors) {
+    public Book(Long bookId, String name, int publishingYear,
+                String publishingHouse, List<String> authors) {
         this.bookId = bookId;
         this.name = name;
         this.publishingYear = publishingYear;

@@ -67,8 +67,8 @@ public class BookDaoImplTest {
     public void updateNegativeTest() {
         try {
             List<Book> books = bookDao.findAll();
-            long id = books.get(books.size() - 1).getBookId();
-            Book newBook = new Book(id + 1, "Qwe", 1920, "Piter", new ArrayList<>());
+            long id = books.get(books.size() - 1).getBookId() + 1;
+            Book newBook = new Book(id, "Qwe", 1920, "Piter", new ArrayList<>());
             boolean actual = bookDao.update(newBook);
             assertFalse(actual);
         } catch (DaoException e) {
@@ -94,8 +94,8 @@ public class BookDaoImplTest {
     public void removeNegativeTest() {
         try {
             List<Book> books = bookDao.findAll();
-            long id = books.get(books.size() - 1).getBookId();
-            boolean actual = bookDao.remove(id + 1);
+            long id = books.get(books.size() - 1).getBookId() + 1;
+            boolean actual = bookDao.remove(id);
             assertFalse(actual);
         } catch (DaoException e) {
             fail("Incorrect input");
@@ -256,19 +256,25 @@ public class BookDaoImplTest {
 
     @DataProvider(name = "findByPublishingYearPositiveData")
     public Object[][] createFindByPublishingYearPositiveData() {
-        int publishingYear1 = 1000;
+        int publishingYearBegin1 = 1000;
+        int publishingYearEnd1 = 1000;
         List<Book> expected1 = new ArrayList<>();
         expected1.add(bookStorage.getCreatedBooks().get(2));
         expected1.add(bookStorage.getCreatedBooks().get(6));
-        int publishingYear2 = 1984;
+        int publishingYearBegin2 = 1984;
+        int publishingYearEnd2 = 1990;
         List<Book> expected2 = new ArrayList<>();
         expected2.add(bookStorage.getCreatedBooks().get(0));
-        int publishingYear3 = 2015;
+        expected2.add(bookStorage.getCreatedBooks().get(4));
+        int publishingYearBegin3 = 2015;
+        int publishingYearEnd3 = 2019;
         List<Book> expected3 = new ArrayList<>();
         expected3.add(bookStorage.getCreatedBooks().get(9));
-        int publishingYear4 = 2016;
+        int publishingYearBegin4 = 2016;
+        int publishingYearEnd4 = 2016;
         List<Book> expected4 = new ArrayList<>();
-        int publishingYear5 = 1;
+        int publishingYearBegin5 = 1;
+        int publishingYearEnd5 = 2020;
         List<Book> expected5 = new ArrayList<>();
         expected5.add(bookStorage.getCreatedBooks().get(8));
         expected5.add(bookStorage.getCreatedBooks().get(2));
@@ -279,20 +285,22 @@ public class BookDaoImplTest {
         expected5.add(bookStorage.getCreatedBooks().get(0));
         expected5.add(bookStorage.getCreatedBooks().get(4));
         expected5.add(bookStorage.getCreatedBooks().get(9));
+        expected5.add(bookStorage.getCreatedBooks().get(1));
         return new Object[][]{
-                {publishingYear1, expected1},
-                {publishingYear2, expected2},
-                {publishingYear3, expected3},
-                {publishingYear4, expected4},
-                {publishingYear5, expected5}
+                {publishingYearBegin1, publishingYearEnd1, expected1},
+                {publishingYearBegin2, publishingYearEnd2, expected2},
+                {publishingYearBegin3, publishingYearEnd3, expected3},
+                {publishingYearBegin4, publishingYearEnd4, expected4},
+                {publishingYearBegin5, publishingYearEnd5, expected5},
         };
     }
 
     @Test(dataProvider = "findByPublishingYearPositiveData")
-    public void findByPublishingYearPositiveTest(int publishingYear,
-                                                 List<Book> expected) {
+    public void findByPublishingYearPositiveTest(
+            int publishingYearBegin, int publishingYearEnd, List<Book> expected) {
         try {
-            List<Book> actual = bookDao.findByPublishingYear(publishingYear);
+            List<Book> actual = bookDao.findByPublishingYearInterval(
+                    publishingYearBegin, publishingYearEnd);
             assertEquals(actual, expected);
         } catch (DaoException e) {
             fail("Incorrect input");
@@ -301,36 +309,41 @@ public class BookDaoImplTest {
 
     @DataProvider(name = "findByPublishingYearNegativeData")
     public Object[][] createFindByPublishingYearNegativeData() {
-        int publishingYear1 = 1000;
+        int publishingYearBegin1 = 1000;
+        int publishingYearEnd1 = 1000;
         List<Book> expected1 = new ArrayList<>();
-        expected1.add(bookStorage.getCreatedBooks().get(6));
         expected1.add(bookStorage.getCreatedBooks().get(2));
-        int publishingYear2 = 1984;
+        int publishingYearBegin2 = 1984;
+        int publishingYearEnd2 = 1990;
         List<Book> expected2 = new ArrayList<>();
         expected2.add(bookStorage.getCreatedBooks().get(0));
-        expected2.add(bookStorage.getCreatedBooks().get(0));
-        int publishingYear3 = 2021;
+        expected2.add(bookStorage.getCreatedBooks().get(4));
+        expected2.add(bookStorage.getCreatedBooks().get(4));
+        int publishingYearBegin3 = 2015;
+        int publishingYearEnd3 = 2019;
         List<Book> expected3 = new ArrayList<>();
-        expected3.add(bookStorage.getCreatedBooks().get(9));
-        int publishingYear4 = 2016;
+        int publishingYearBegin4 = 2016;
+        int publishingYearEnd4 = 2016;
         List<Book> expected4 = new ArrayList<>();
-        expected4.add(bookStorage.getCreatedBooks().get(0));
-        int publishingYear5 = 1;
+        expected4.add(null);
+        int publishingYearBegin5 = 1;
+        int publishingYearEnd5 = 2020;
         List<Book> expected5 = new ArrayList<>();
         return new Object[][]{
-                {publishingYear1, expected1},
-                {publishingYear2, expected2},
-                {publishingYear3, expected3},
-                {publishingYear4, expected4},
-                {publishingYear5, expected5}
+                {publishingYearBegin1, publishingYearEnd1, expected1},
+                {publishingYearBegin2, publishingYearEnd2, expected2},
+                {publishingYearBegin3, publishingYearEnd3, expected3},
+                {publishingYearBegin4, publishingYearEnd4, expected4},
+                {publishingYearBegin5, publishingYearEnd5, expected5},
         };
     }
 
     @Test(dataProvider = "findByPublishingYearNegativeData")
-    public void findByPublishingYearNegativeTest(int publishingYear,
-                                                 List<Book> expected) {
+    public void findByPublishingYearNegativeTest(
+            int publishingYearBegin, int publishingYearEnd, List<Book> expected) {
         try {
-            List<Book> actual = bookDao.findByPublishingYear(publishingYear);
+            List<Book> actual = bookDao.findByPublishingYearInterval(
+                    publishingYearBegin, publishingYearEnd);
             assertNotEquals(actual, expected);
         } catch (DaoException e) {
             fail("Incorrect input");
@@ -371,8 +384,8 @@ public class BookDaoImplTest {
     }
 
     @Test(dataProvider = "findByPublishingHousePositiveData")
-    public void findByPublishingHousePositiveTest(String publishingHouse,
-                                                  List<Book> expected) {
+    public void findByPublishingHousePositiveTest(
+            String publishingHouse, List<Book> expected) {
         try {
             List<Book> actual = bookDao.findByPublishingHouse(publishingHouse);
             assertEquals(actual, expected);
@@ -404,8 +417,8 @@ public class BookDaoImplTest {
     }
 
     @Test(dataProvider = "findByPublishingHouseNegativeData")
-    public void findByPublishingHouseNegativeTest(String publishingHouse,
-                                                  List<Book> expected) {
+    public void findByPublishingHouseNegativeTest(
+            String publishingHouse, List<Book> expected) {
         try {
             List<Book> actual = bookDao.findByPublishingHouse(publishingHouse);
             assertNotEquals(actual, expected);

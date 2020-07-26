@@ -80,8 +80,8 @@ public class BookParserTest {
     }
 
     @Test(dataProvider = "parsePublishingYearPositiveData")
-    public void parsePublishingYearPositiveTest(String publishingYear,
-                                                int expected) {
+    public void parsePublishingYearPositiveTest(
+            String publishingYear, int expected) {
         long actual = bookParser.parsePublishingYear(publishingYear);
         assertEquals(actual, expected);
     }
@@ -99,8 +99,8 @@ public class BookParserTest {
     }
 
     @Test(dataProvider = "parsePublishingYearNegativeData")
-    public void parsePublishingYearNegativeTest(String publishingYear,
-                                                int expected) {
+    public void parsePublishingYearNegativeTest(
+            String publishingYear, int expected) {
         long actual = bookParser.parsePublishingYear(publishingYear);
         assertNotEquals(actual, expected);
     }
@@ -111,13 +111,13 @@ public class BookParserTest {
                 {"", new ArrayList<>()},
                 {"a, b, c", new ArrayList<>(Arrays.asList("a", "b", "c"))},
                 {"a, b,c", new ArrayList<>(Arrays.asList("a", "b,c"))},
-                {"Oleg, Qwe qwe", new ArrayList<>(Arrays.asList("Oleg", "Qwe qwe"))}
+                {"Alex, Alex alex", new ArrayList<>(Arrays.asList("Alex", "Alex alex"))}
         };
     }
 
     @Test(dataProvider = "parseAuthorsToListPositiveData")
-    public void parseAuthorsToListPositiveTest(String authors,
-                                               List<String> expected) {
+    public void parseAuthorsToListPositiveTest(
+            String authors, List<String> expected) {
         List<String> actual = bookParser.parseAuthorsToList(authors);
         assertEquals(actual, expected);
     }
@@ -128,13 +128,13 @@ public class BookParserTest {
                 {"a", new ArrayList<>()},
                 {"a,b, c", new ArrayList<>(Arrays.asList("a", "b", "c"))},
                 {"a, b,c", new ArrayList<>(Arrays.asList("a", "b", "c"))},
-                {"Oleg, Qwe qwe", new ArrayList<>(Arrays.asList("Oleg, Qwe qwe"))}
+                {"Alex, Alex alex", new ArrayList<>(Arrays.asList("Alex, Alex alex"))}
         };
     }
 
     @Test(dataProvider = "parseAuthorsToListNegativeData")
-    public void parseAuthorsToListNegativeTest(String authors,
-                                               List<String> expected) {
+    public void parseAuthorsToListNegativeTest(
+            String authors, List<String> expected) {
         List<String> actual = bookParser.parseAuthorsToList(authors);
         assertNotEquals(actual, expected);
     }
@@ -145,13 +145,13 @@ public class BookParserTest {
                 {new ArrayList<>(), ""},
                 {new ArrayList<>(Arrays.asList("a", "b", "c")), "a, b, c"},
                 {new ArrayList<>(Arrays.asList("a", "b,c")), "a, b,c"},
-                {new ArrayList<>(Arrays.asList("Oleg", "Qwe qwe")), "Oleg, Qwe qwe"}
+                {new ArrayList<>(Arrays.asList("Alex", "Alex alex")), "Alex, Alex alex"}
         };
     }
 
     @Test(dataProvider = "parseAuthorsToStringPositiveData")
-    public void parseAuthorsToStringPositiveTest(List<String> authors,
-                                                 String expected) {
+    public void parseAuthorsToStringPositiveTest(
+            List<String> authors, String expected) {
         String actual = bookParser.parseAuthorsToString(authors);
         assertEquals(actual, expected);
     }
@@ -162,13 +162,13 @@ public class BookParserTest {
                 {new ArrayList<>(), "a"},
                 {new ArrayList<>(Arrays.asList("a, b", " c")), "a, b, c"},
                 {new ArrayList<>(Arrays.asList("a", "b,c")), "a b c"},
-                {new ArrayList<>(Arrays.asList("Oleg, Qwe qwe")), "Oleg, Qwe, qwe"}
+                {new ArrayList<>(Arrays.asList("Alex, Alex alex")), "Alex, Alex, alex"}
         };
     }
 
     @Test(dataProvider = "parseAuthorsToStringNegativeData")
-    public void parseAuthorsToStringNegativeTest(List<String> authors,
-                                                 String expected) {
+    public void parseAuthorsToStringNegativeTest(
+            List<String> authors, String expected) {
         String actual = bookParser.parseAuthorsToString(authors);
         assertNotEquals(actual, expected);
     }

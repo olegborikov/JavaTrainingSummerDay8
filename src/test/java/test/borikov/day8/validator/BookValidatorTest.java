@@ -108,13 +108,48 @@ public class BookValidatorTest {
         return new Object[][]{
                 {0},
                 {-123},
-                {2021}
+                {2100}
         };
     }
 
     @Test(dataProvider = "isPublishingYearCorrectNegativeData")
     public void isPublishingYearCorrectNegativeTest(int publishingYear) {
         boolean actual = bookValidator.isPublishingYearCorrect(publishingYear);
+        assertFalse(actual);
+    }
+
+    @DataProvider(name = "isPublishingYearIntervalCorrectPositiveData")
+    public Object[][] createIsPublishingYearIntervalCorrectPositiveData() {
+        return new Object[][]{
+                {1, 2020},
+                {1999, 2000},
+                {2020, 2020}
+        };
+    }
+
+    @Test(dataProvider = "isPublishingYearIntervalCorrectPositiveData")
+    public void isPublishingYearIntervalCorrectPositiveTest(
+            int publishingYearBegin, int publishingYearEnd) {
+        boolean actual = bookValidator.isPublishingYearIntervalCorrect(
+                publishingYearBegin, publishingYearEnd);
+        assertTrue(actual);
+    }
+
+    @DataProvider(name = "isPublishingYearIntervalCorrectNegativeData")
+    public Object[][] createIsPublishingYearIntervalCorrectNegativeData() {
+        return new Object[][]{
+                {0, -20},
+                {-2, -3},
+                {-100, -100},
+                {2000, 2100}
+        };
+    }
+
+    @Test(dataProvider = "isPublishingYearIntervalCorrectNegativeData")
+    public void isPublishingYearIntervalCorrectNegativeTest(
+            int publishingYearBegin, int publishingYearEnd) {
+        boolean actual = bookValidator.isPublishingYearIntervalCorrect(
+                publishingYearBegin, publishingYearEnd);
         assertFalse(actual);
     }
 
@@ -125,7 +160,7 @@ public class BookValidatorTest {
                 {"Московская печатная студия"},
                 {"Москва\\Питер"},
                 {"Я"},
-                {"Минское. Независимое. Печатное. агенство"}
+                {"this is long line that have 40 symbols.."}
         };
     }
 
@@ -141,7 +176,7 @@ public class BookValidatorTest {
                 {"   "},
                 {null},
                 {""},
-                {"Минское государственное независимое печатное агенство"}
+                {"this is very long line that have 43 symbols"}
         };
     }
 
@@ -158,7 +193,7 @@ public class BookValidatorTest {
         authors1.add("Oleg");
         List<String> authors2 = new ArrayList<>();
         authors2.add("Alex");
-        authors2.add("Дунин-Марцинкевич В.Дунин-Марцинкевич В.");
+        authors2.add("this is long line that have 40 symbols..");
         List<String> authors3 = new ArrayList<>();
         authors3.add("Я");
         List<String> authors4 = new ArrayList<>();
@@ -229,7 +264,7 @@ public class BookValidatorTest {
                 {"Олег"},
                 {"Qwerty"},
                 {"Alex"},
-                {"Дунин-Марцинкевич В.Дунин-Марцинкевич В."},
+                {"this is long line that have 40 symbols.."},
                 {"Я"},
         };
     }
@@ -246,13 +281,45 @@ public class BookValidatorTest {
                 {"    "},
                 {null},
                 {""},
-                {"Дунин-Марцинкевич ВикентийДунин-Марцинкевич Викентий"}
+                {"this is very long line that have 43 symbols"}
         };
     }
 
     @Test(dataProvider = "isAuthorCorrectNegativeData")
     public void isAuthorCorrectNegativeTest(String author) {
         boolean actual = bookValidator.isAuthorCorrect(author);
+        assertFalse(actual);
+    }
+
+    @DataProvider(name = "isRequestCorrectPositiveData")
+    public Object[][] createIsRequestCorrectPositiveData() {
+        return new Object[][]{
+                {"Олег"},
+                {"Qwerty"},
+                {""},
+                {"this is long line that have 40 symbols.."},
+                {"Я"},
+        };
+    }
+
+    @Test(dataProvider = "isRequestCorrectPositiveData")
+    public void isRequestCorrectPositiveTest(String request) {
+        boolean actual = bookValidator.isRequestCorrect(request);
+        assertTrue(actual);
+    }
+
+    @DataProvider(name = "isRequestCorrectNegativeData")
+    public Object[][] createIsRequestCorrectNegativeData() {
+        return new Object[][]{
+                {null},
+                {" "},
+                {"this is very long line that have 43 symbols"}
+        };
+    }
+
+    @Test(dataProvider = "isRequestCorrectNegativeData")
+    public void isRequestCorrectNegativeTest(String request) {
+        boolean actual = bookValidator.isAuthorCorrect(request);
         assertFalse(actual);
     }
 }
