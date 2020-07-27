@@ -254,8 +254,8 @@ public class BookDaoImplTest {
         }
     }
 
-    @DataProvider(name = "findByPublishingYearPositiveData")
-    public Object[][] createFindByPublishingYearPositiveData() {
+    @DataProvider(name = "findByPublishingYearIntervalPositiveData")
+    public Object[][] createFindByPublishingYearIntervalPositiveData() {
         int publishingYearBegin1 = 1000;
         int publishingYearEnd1 = 1000;
         List<Book> expected1 = new ArrayList<>();
@@ -295,8 +295,8 @@ public class BookDaoImplTest {
         };
     }
 
-    @Test(dataProvider = "findByPublishingYearPositiveData")
-    public void findByPublishingYearPositiveTest(
+    @Test(dataProvider = "findByPublishingYearIntervalPositiveData")
+    public void findByPublishingYearIntervalPositiveTest(
             int publishingYearBegin, int publishingYearEnd, List<Book> expected) {
         try {
             List<Book> actual = bookDao.findByPublishingYearInterval(
@@ -307,8 +307,8 @@ public class BookDaoImplTest {
         }
     }
 
-    @DataProvider(name = "findByPublishingYearNegativeData")
-    public Object[][] createFindByPublishingYearNegativeData() {
+    @DataProvider(name = "findByPublishingYearIntervalNegativeData")
+    public Object[][] createFindByPublishingYearIntervalNegativeData() {
         int publishingYearBegin1 = 1000;
         int publishingYearEnd1 = 1000;
         List<Book> expected1 = new ArrayList<>();
@@ -338,8 +338,8 @@ public class BookDaoImplTest {
         };
     }
 
-    @Test(dataProvider = "findByPublishingYearNegativeData")
-    public void findByPublishingYearNegativeTest(
+    @Test(dataProvider = "findByPublishingYearIntervalNegativeData")
+    public void findByPublishingYearIntervalNegativeTest(
             int publishingYearBegin, int publishingYearEnd, List<Book> expected) {
         try {
             List<Book> actual = bookDao.findByPublishingYearInterval(

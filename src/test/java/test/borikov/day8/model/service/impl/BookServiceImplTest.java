@@ -1,4 +1,3 @@
-/*
 package test.borikov.day8.model.service.impl;
 
 import com.borikov.day8.exception.ServiceException;
@@ -37,7 +36,8 @@ public class BookServiceImplTest {
     @Test(priority = 1)
     public void addBookPositiveTest() {
         try {
-            boolean actual = bookService.addBook("мир", "2000", "Минск", Arrays.asList("Alex"));
+            boolean actual = bookService.addBook("мир", "2000",
+                    "Минск", Arrays.asList("Alex"));
             assertTrue(actual);
         } catch (ServiceException e) {
             fail("Incorrect input");
@@ -72,9 +72,11 @@ public class BookServiceImplTest {
     }
 
     @Test(dataProvider = "addBookNegativeData")
-    public void addNegativeTest(String name, String publishingYear, String publishingHouse, List<String> authors) {
+    public void addBookNegativeTest(String name, String publishingYear,
+                                    String publishingHouse, List<String> authors) {
         try {
-            boolean actual = bookService.addBook(name, publishingYear, publishingHouse, authors);
+            boolean actual = bookService.addBook(name, publishingYear,
+                    publishingHouse, authors);
             assertFalse(actual);
         } catch (ServiceException e) {
             fail("Incorrect input");
@@ -86,7 +88,8 @@ public class BookServiceImplTest {
         try {
             List<Book> books = bookService.findAllBooks();
             Long id = books.get(books.size() - 1).getBookId();
-            boolean actual = bookService.updateBook(id.toString(), "Qwe", "1920", "Piter", new ArrayList<>());
+            boolean actual = bookService.updateBook(id.toString(), "Qwe", "1920",
+                    "Piter", new ArrayList<>());
             assertTrue(actual);
         } catch (ServiceException e) {
             fail("Incorrect input");
@@ -131,9 +134,11 @@ public class BookServiceImplTest {
     }
 
     @Test(dataProvider = "updateBookNegativeData")
-    public void updateBookNegativeTest(String id, String name, String publishingYear, String publishingHouse, List<String> authors) {
+    public void updateBookNegativeTest(String id, String name, String publishingYear,
+                                       String publishingHouse, List<String> authors) {
         try {
-            boolean actual = bookService.updateBook(id, name, publishingYear, publishingHouse, authors);
+            boolean actual = bookService.updateBook(id, name,
+                    publishingYear, publishingHouse, authors);
             assertFalse(actual);
         } catch (ServiceException e) {
             fail("Incorrect input");
@@ -155,12 +160,12 @@ public class BookServiceImplTest {
     @DataProvider(name = "removeBookNegativeData")
     public Object[][] createRemoveBookNegativeData() throws ServiceException {
         List<Book> books = bookService.findAllBooks();
-        Long id1 = books.get(books.size() - 1).getBookId() + 1;
+        long id1 = books.get(books.size() - 1).getBookId() + 1;
         return new Object[][]{
                 {"name"},
                 {"100_000_000"},
                 {"2002.1"},
-                {id1.toString()},
+                {Long.toString(id1)},
         };
     }
 
@@ -335,20 +340,26 @@ public class BookServiceImplTest {
         }
     }
 
-    @DataProvider(name = "findBooksByPublishingYearPositiveData")
-    public Object[][] createFindBooksByPublishingYearPositiveData() {
-        String publishingYear1 = "1000";
+    @DataProvider(name = "findBooksByPublishingYearIntervalPositiveData")
+    public Object[][] createFindBooksByPublishingYearIntervalPositiveData() {
+        String publishingYearBegin1 = "1000";
+        String publishingYearEnd1 = "1000";
         List<Book> expected1 = new ArrayList<>();
         expected1.add(bookStorage.getCreatedBooks().get(2));
         expected1.add(bookStorage.getCreatedBooks().get(6));
-        String publishingYear2 = "1984";
+        String publishingYearBegin2 = "1984";
+        String publishingYearEnd2 = "1990";
         List<Book> expected2 = new ArrayList<>();
         expected2.add(bookStorage.getCreatedBooks().get(0));
-        String publishingYear3 = "kj";
+        expected2.add(bookStorage.getCreatedBooks().get(4));
+        String publishingYearBegin3 = "2015";
+        String publishingYearEnd3 = "2014";
         List<Book> expected3 = new ArrayList<>();
-        String publishingYear4 = "2025";
+        String publishingYearBegin4 = "2016";
+        String publishingYearEnd4 = "2016";
         List<Book> expected4 = new ArrayList<>();
-        String publishingYear5 = "1";
+        String publishingYearBegin5 = "1";
+        String publishingYearEnd5 = "2020";
         List<Book> expected5 = new ArrayList<>();
         expected5.add(bookStorage.getCreatedBooks().get(8));
         expected5.add(bookStorage.getCreatedBooks().get(2));
@@ -359,58 +370,74 @@ public class BookServiceImplTest {
         expected5.add(bookStorage.getCreatedBooks().get(0));
         expected5.add(bookStorage.getCreatedBooks().get(4));
         expected5.add(bookStorage.getCreatedBooks().get(9));
+        expected5.add(bookStorage.getCreatedBooks().get(1));
+        String publishingYearBegin6 = "acv";
+        String publishingYearEnd6 = "2015";
+        List<Book> expected6 = new ArrayList<>();
         return new Object[][]{
-                {publishingYear1, expected1},
-                {publishingYear2, expected2},
-                {publishingYear3, expected3},
-                {publishingYear4, expected4},
-                {publishingYear5, expected5}
+                {publishingYearBegin1, publishingYearEnd1, expected1},
+                {publishingYearBegin2, publishingYearEnd2, expected2},
+                {publishingYearBegin3, publishingYearEnd3, expected3},
+                {publishingYearBegin4, publishingYearEnd4, expected4},
+                {publishingYearBegin5, publishingYearEnd5, expected5},
+                {publishingYearBegin6, publishingYearEnd6, expected6}
         };
     }
 
-    @Test(dataProvider = "findBooksByPublishingYearPositiveData")
-    public void findBooksByPublishingYearPositiveTest(String publishingYear,
-                                                      List<Book> expected) {
+    @Test(dataProvider = "findBooksByPublishingYearIntervalPositiveData")
+    public void findBooksByPublishingYearIntervalPositiveTest(
+            String publishingYearBegin, String publishingYearEnd, List<Book> expected) {
         try {
-            List<Book> actual = bookService.findBooksByPublishingYear(publishingYear);
+            List<Book> actual = bookService.findBooksByPublishingYearInterval(
+                    publishingYearBegin, publishingYearEnd);
             assertEquals(actual, expected);
         } catch (ServiceException e) {
             fail("Incorrect input");
         }
     }
 
-    @DataProvider(name = "findBooksByPublishingYearNegativeData")
-    public Object[][] createFindBooksByPublishingYearNegativeData() {
-        String publishingYear1 = "1000";
+    @DataProvider(name = "findBooksByPublishingYearIntervalNegativeData")
+    public Object[][] createFindBooksByPublishingYearIntervalNegativeData() {
+        String publishingYearBegin1 = "1000";
+        String publishingYearEnd1 = "1000";
         List<Book> expected1 = new ArrayList<>();
-        expected1.add(bookStorage.getCreatedBooks().get(6));
         expected1.add(bookStorage.getCreatedBooks().get(2));
-        String publishingYear2 = "1984";
+        expected1.add(bookStorage.getCreatedBooks().get(6));
+        expected1.add(bookStorage.getCreatedBooks().get(6));
+        String publishingYearBegin2 = "1984";
+        String publishingYearEnd2 = "1990";
         List<Book> expected2 = new ArrayList<>();
         expected2.add(bookStorage.getCreatedBooks().get(0));
-        expected2.add(bookStorage.getCreatedBooks().get(0));
-        String publishingYear3 = "2021";
+        String publishingYearBegin3 = "2015";
+        String publishingYearEnd3 = "2014";
         List<Book> expected3 = new ArrayList<>();
         expected3.add(bookStorage.getCreatedBooks().get(9));
-        String publishingYear4 = "as";
-        List<Book> expected4 = new ArrayList<>();
-        expected4.add(bookStorage.getCreatedBooks().get(0));
-        String publishingYear5 = "1";
+        String publishingYearBegin4 = "2016";
+        String publishingYearEnd4 = "2016";
+        List<Book> expected4 = null;
+        String publishingYearBegin5 = "1";
+        String publishingYearEnd5 = "2020";
         List<Book> expected5 = new ArrayList<>();
+        String publishingYearBegin6 = "acv";
+        String publishingYearEnd6 = "2015";
+        List<Book> expected6 = new ArrayList<>();
+        expected6.add(bookStorage.getCreatedBooks().get(9));
         return new Object[][]{
-                {publishingYear1, expected1},
-                {publishingYear2, expected2},
-                {publishingYear3, expected3},
-                {publishingYear4, expected4},
-                {publishingYear5, expected5}
+                {publishingYearBegin1, publishingYearEnd1, expected1},
+                {publishingYearBegin2, publishingYearEnd2, expected2},
+                {publishingYearBegin3, publishingYearEnd3, expected3},
+                {publishingYearBegin4, publishingYearEnd4, expected4},
+                {publishingYearBegin5, publishingYearEnd5, expected5},
+                {publishingYearBegin6, publishingYearEnd6, expected6}
         };
     }
 
-    @Test(dataProvider = "findBooksByPublishingYearNegativeData")
-    public void findBooksByPublishingYearNegativeTest(String publishingYear,
-                                                      List<Book> expected) {
+    @Test(dataProvider = "findBooksByPublishingYearIntervalNegativeData")
+    public void findBooksByPublishingYearIntervalNegativeTest(
+            String publishingYearBegin, String publishingYearEnd, List<Book> expected) {
         try {
-            List<Book> actual = bookService.findBooksByPublishingYear(publishingYear);
+            List<Book> actual = bookService.findBooksByPublishingYearInterval(
+                    publishingYearBegin, publishingYearEnd);
             assertNotEquals(actual, expected);
         } catch (ServiceException e) {
             fail("Incorrect input");
@@ -457,10 +484,11 @@ public class BookServiceImplTest {
     }
 
     @Test(dataProvider = "findBooksByPublishingHousePositiveData")
-    public void findBooksByPublishingHousePositiveTest(String publishingHouse,
-                                                       List<Book> expected) {
+    public void findBooksByPublishingHousePositiveTest(
+            String publishingHouse, List<Book> expected) {
         try {
-            List<Book> actual = bookService.findBooksByPublishingHouse(publishingHouse);
+            List<Book> actual =
+                    bookService.findBooksByPublishingHouse(publishingHouse);
             assertEquals(actual, expected);
         } catch (ServiceException e) {
             fail("Incorrect input");
@@ -490,10 +518,11 @@ public class BookServiceImplTest {
     }
 
     @Test(dataProvider = "findBooksByPublishingHouseNegativeData")
-    public void findBooksByPublishingHouseNegativeTest(String publishingHouse,
-                                                       List<Book> expected) {
+    public void findBooksByPublishingHouseNegativeTest(
+            String publishingHouse, List<Book> expected) {
         try {
-            List<Book> actual = bookService.findBooksByPublishingHouse(publishingHouse);
+            List<Book> actual =
+                    bookService.findBooksByPublishingHouse(publishingHouse);
             assertNotEquals(actual, expected);
         } catch (ServiceException e) {
             fail("Incorrect input");
@@ -597,4 +626,4 @@ public class BookServiceImplTest {
             fail("Incorrect input");
         }
     }
-}*/
+}

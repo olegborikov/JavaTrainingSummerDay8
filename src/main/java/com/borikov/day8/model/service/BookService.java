@@ -27,8 +27,8 @@ public interface BookService {
             String publishingYearBegin, String publishingYearEnd)
             throws ServiceException;
 
-    List<Book> findBooksByPublishingHouse(
-            String publishingHouse) throws ServiceException;
+    List<Book> findBooksByPublishingHouse(String publishingHouse)
+            throws ServiceException;
 
     List<Book> findBooksByAuthor(String author) throws ServiceException;
 }
