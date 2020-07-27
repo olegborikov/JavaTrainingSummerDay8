@@ -47,11 +47,11 @@ public class BookDaoImpl implements BookDao {
              PreparedStatement statement = connection.prepareStatement(ADD_BOOK,
                      Statement.RETURN_GENERATED_KEYS)) {
             BookParser bookParser = new BookParser();
-            String authorsParsed = bookParser.parseAuthorsToString(book.getAuthors());
+            String parsedAuthors = bookParser.parseAuthorsToString(book.getAuthors());
             statement.setString(1, book.getName());
             statement.setInt(2, book.getPublishingYear());
             statement.setString(3, book.getPublishingHouse());
-            statement.setString(4, authorsParsed);
+            statement.setString(4, parsedAuthors);
             int rows = statement.executeUpdate();
             result = rows > 0;
             ResultSet generatedKeys = statement.getGeneratedKeys();
@@ -71,11 +71,11 @@ public class BookDaoImpl implements BookDao {
              PreparedStatement statement =
                      connection.prepareStatement(UPDATE_BOOK_BY_ID)) {
             BookParser bookParser = new BookParser();
-            String authorsParsed = bookParser.parseAuthorsToString(book.getAuthors());
+            String parsedAuthors = bookParser.parseAuthorsToString(book.getAuthors());
             statement.setString(1, book.getName());
             statement.setInt(2, book.getPublishingYear());
             statement.setString(3, book.getPublishingHouse());
-            statement.setString(4, authorsParsed);
+            statement.setString(4, parsedAuthors);
             statement.setLong(5, book.getBookId());
             int rows = statement.executeUpdate();
             result = rows > 0;
@@ -231,8 +231,8 @@ public class BookDaoImpl implements BookDao {
         String publishingHouse = resultSet.getString(ColumnName.PUBLISHING_HOUSE);
         String authors = resultSet.getString(ColumnName.AUTHORS);
         BookParser bookParser = new BookParser();
-        List<String> authorsParsed = bookParser.parseAuthorsToList(authors);
-        Book book = new Book(id, name, publishingYear, publishingHouse, authorsParsed);
+        List<String> parsedAuthors = bookParser.parseAuthorsToList(authors);
+        Book book = new Book(id, name, publishingYear, publishingHouse, parsedAuthors);
         return book;
     }
 }

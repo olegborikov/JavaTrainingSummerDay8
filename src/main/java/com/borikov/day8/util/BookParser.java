@@ -10,38 +10,38 @@ public class BookParser {
     private static final int DEFAULT_VALUE = -1;
 
     public long parseId(String id) {
-        long idParsed;
+        long parsedId;
         try {
-            idParsed = Long.parseLong(id);
+            parsedId = Long.parseLong(id);
         } catch (NumberFormatException e) {
-            idParsed = DEFAULT_VALUE;
+            parsedId = DEFAULT_VALUE;
         }
-        return idParsed;
+        return parsedId;
     }
 
     public int parsePublishingYear(String publishingYear) {
-        int publishingYearParsed;
+        int parsedPublishingYear;
         try {
-            publishingYearParsed = Integer.parseInt(publishingYear);
+            parsedPublishingYear = Integer.parseInt(publishingYear);
         } catch (NumberFormatException e) {
-            publishingYearParsed = DEFAULT_VALUE;
+            parsedPublishingYear = DEFAULT_VALUE;
         }
-        return publishingYearParsed;
+        return parsedPublishingYear;
     }
 
     public List<String> parseAuthorsToList(String authors) {
-        List<String> authorsParsed = new ArrayList<>();
+        List<String> parsedAuthors = new ArrayList<>();
         if (!authors.isBlank()) {
             String[] authorsArr = authors.split(COMMA);
-            authorsParsed = new ArrayList<>(Arrays.asList(authorsArr));
+            parsedAuthors = new ArrayList<>(Arrays.asList(authorsArr));
         }
-        return authorsParsed;
+        return parsedAuthors;
     }
 
     public String parseAuthorsToString(List<String> authors) {
-        String authorsParsed = authors.stream()
+        String parsedAuthors = authors.stream()
                 .map(a -> String.valueOf(a))
                 .collect(Collectors.joining(COMMA));
-        return authorsParsed;
+        return parsedAuthors;
     }
 }
