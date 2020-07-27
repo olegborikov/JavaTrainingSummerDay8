@@ -13,31 +13,31 @@ import java.util.List;
 import java.util.Optional;
 
 public class BookDaoImpl implements BookDao {
-    private static final String ADD_BOOK = "INSERT INTO books " +
-            "(name, publishing_year, publishing_house, authors) VALUES (?, ?, ?, ?)";
-    private static final String REMOVE_BOOK_BY_ID = "DELETE FROM books " +
-            "WHERE book_id = ?";
-    private static final String UPDATE_BOOK_BY_ID = "UPDATE books " +
-            "SET name = ?, publishing_year = ?, publishing_house = ?, authors = ? " +
-            "WHERE book_id = ?";
-    private static final String FIND_ALL_BOOKS = "SELECT book_id, name, " +
-            "publishing_year, publishing_house, authors FROM books";
-    private static final String FIND_BOOK_BY_ID = "SELECT book_id, name, " +
-            "publishing_year, publishing_house, authors FROM books WHERE book_id = ?";
-    private static final String FIND_BOOKS_BY_NAME = "SELECT book_id, name, " +
-            "publishing_year, publishing_house, authors FROM books " +
-            "WHERE name LIKE ? ORDER BY name";
+    private static final String ADD_BOOK = "INSERT INTO books "
+            + "(name, publishing_year, publishing_house, authors) VALUES (?, ?, ?, ?)";
+    private static final String REMOVE_BOOK_BY_ID = "DELETE FROM books "
+            + "WHERE book_id = ?";
+    private static final String UPDATE_BOOK_BY_ID = "UPDATE books "
+            + "SET name = ?, publishing_year = ?, publishing_house = ?, authors = ? "
+            + "WHERE book_id = ?";
+    private static final String FIND_ALL_BOOKS = "SELECT book_id, name, "
+            + "publishing_year, publishing_house, authors FROM books";
+    private static final String FIND_BOOK_BY_ID = "SELECT book_id, name, "
+            + "publishing_year, publishing_house, authors FROM books WHERE book_id = ?";
+    private static final String FIND_BOOKS_BY_NAME = "SELECT book_id, name, "
+            + "publishing_year, publishing_house, authors FROM books "
+            + "WHERE name LIKE ? ORDER BY name";
     private static final String FIND_BOOKS_BY_PUBLISHING_YEAR_INTERVAL =
-            "SELECT book_id, name, publishing_year, publishing_house, authors " +
-                    "FROM books WHERE publishing_year >= ? AND publishing_year <= ? " +
-                    "ORDER BY publishing_year";
+            "SELECT book_id, name, publishing_year, publishing_house, authors "
+                    + "FROM books WHERE publishing_year >= ? AND publishing_year <= ? "
+                    + "ORDER BY publishing_year";
     private static final String FIND_BOOKS_BY_PUBLISHING_HOUSE =
-            "SELECT book_id, name, publishing_year, publishing_house, authors " +
-                    "FROM books WHERE publishing_house LIKE ? " +
-                    "ORDER BY publishing_house";
-    private static final String FIND_BOOKS_BY_AUTHOR = "SELECT book_id, name, " +
-            "publishing_year, publishing_house, authors FROM books " +
-            "WHERE authors LIKE ? ORDER BY CHAR_LENGTH(authors)";
+            "SELECT book_id, name, publishing_year, publishing_house, authors "
+                    + "FROM books WHERE publishing_house LIKE ? "
+                    + "ORDER BY publishing_house";
+    private static final String FIND_BOOKS_BY_AUTHOR = "SELECT book_id, name, "
+            + "publishing_year, publishing_house, authors FROM books "
+            + "WHERE authors LIKE ? ORDER BY CHAR_LENGTH(authors)";
     private static final String PERCENT = "%";
 
     @Override

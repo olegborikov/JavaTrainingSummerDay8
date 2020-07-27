@@ -21,10 +21,10 @@ public class BookServiceImpl implements BookService {
         boolean result = false;
         int publishingYearParsed =
                 bookParser.parsePublishingYear(publishingYear);
-        if (bookValidator.isPublishingYearCorrect(publishingYearParsed) &&
-                bookValidator.isNameCorrect(name) &&
-                bookValidator.isPublishingHouseCorrect(publishingHouse) &&
-                bookValidator.isAuthorsCorrect(authors)) {
+        if (bookValidator.isPublishingYearCorrect(publishingYearParsed)
+                && bookValidator.isNameCorrect(name)
+                && bookValidator.isPublishingHouseCorrect(publishingHouse)
+                && bookValidator.isAuthorsCorrect(authors)) {
             try {
                 BookDaoImpl bookDao = new BookDaoImpl();
                 Book book = new Book(null, name, publishingYearParsed,
@@ -47,11 +47,11 @@ public class BookServiceImpl implements BookService {
         long idParsed = bookParser.parseId(id);
         int publishingYearParsed =
                 bookParser.parsePublishingYear(publishingYear);
-        if (bookValidator.isIdCorrect(idParsed) &&
-                bookValidator.isPublishingYearCorrect(publishingYearParsed) &&
-                bookValidator.isNameCorrect(name) &&
-                bookValidator.isPublishingHouseCorrect(publishingHouse) &&
-                bookValidator.isAuthorsCorrect(authors)) {
+        if (bookValidator.isIdCorrect(idParsed)
+                && bookValidator.isPublishingYearCorrect(publishingYearParsed)
+                && bookValidator.isNameCorrect(name)
+                && bookValidator.isPublishingHouseCorrect(publishingHouse)
+                && bookValidator.isAuthorsCorrect(authors)) {
             try {
                 BookDaoImpl bookDao = new BookDaoImpl();
                 Book book = new Book(idParsed, name, publishingYearParsed,

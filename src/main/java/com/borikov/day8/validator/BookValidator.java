@@ -24,15 +24,15 @@ public class BookValidator {
     public boolean isNameCorrect(String name) {
         boolean result = false;
         if (name != null && !name.isBlank()) {
-            result = name.length() >= MIN_STRING_LENGTH &&
-                    name.length() <= MAX_STRING_LENGTH;
+            result = name.length() >= MIN_STRING_LENGTH
+                    && name.length() <= MAX_STRING_LENGTH;
         }
         return result;
     }
 
     public boolean isPublishingYearCorrect(int publishingYear) {
-        boolean result = publishingYear >= MIN_PUBLISHING_YEAR &&
-                publishingYear <= MAX_PUBLISHING_YEAR;
+        boolean result = publishingYear >= MIN_PUBLISHING_YEAR
+                && publishingYear <= MAX_PUBLISHING_YEAR;
         return result;
     }
 
@@ -40,8 +40,8 @@ public class BookValidator {
             int publishingYearBegin, int publishingYearEnd) {
         boolean result = false;
         if (publishingYearBegin <= publishingYearEnd) {
-            result = isPublishingYearCorrect(publishingYearBegin) &&
-                    isPublishingYearCorrect(publishingYearEnd);
+            result = isPublishingYearCorrect(publishingYearBegin)
+                    && isPublishingYearCorrect(publishingYearEnd);
         }
         return result;
     }
@@ -49,8 +49,8 @@ public class BookValidator {
     public boolean isPublishingHouseCorrect(String publishingHouse) {
         boolean result = false;
         if (publishingHouse != null && !publishingHouse.isBlank()) {
-            result = publishingHouse.length() >= MIN_STRING_LENGTH &&
-                    publishingHouse.length() <= MAX_STRING_LENGTH;
+            result = publishingHouse.length() >= MIN_STRING_LENGTH
+                    && publishingHouse.length() <= MAX_STRING_LENGTH;
         }
         return result;
     }
@@ -58,8 +58,8 @@ public class BookValidator {
     public boolean isAuthorsCorrect(List<String> authors) {
         boolean result = false;
         if (authors != null) {
-            result = authors.size() <= MAX_AUTHORS_AMOUNT &&
-                    authors.stream().allMatch(author -> isAuthorCorrect(author));
+            result = authors.size() <= MAX_AUTHORS_AMOUNT
+                    && authors.stream().allMatch(author -> isAuthorCorrect(author));
         }
         return result;
     }
@@ -67,8 +67,8 @@ public class BookValidator {
     public boolean isAuthorCorrect(String author) {
         boolean result = false;
         if (author != null && !author.isBlank()) {
-            result = author.length() >= MIN_STRING_LENGTH &&
-                    author.length() <= MAX_STRING_LENGTH;
+            result = author.length() >= MIN_STRING_LENGTH
+                    && author.length() <= MAX_STRING_LENGTH;
         }
         return result;
     }

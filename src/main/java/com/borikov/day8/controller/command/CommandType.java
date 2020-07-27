@@ -12,6 +12,7 @@ public enum CommandType {
     FIND_BOOKS_BY_PUBLISHING_YEAR_INTERVAL(new FindBooksByPublishingYearIntervalCommand()),
     FIND_BOOKS_BY_PUBLISHING_HOUSE(new FindBooksByPublishingHouseCommand()),
     FIND_BOOKS_BY_AUTHOR(new FindBooksByAuthorCommand());
+
     private final Command command;
 
     CommandType(Command command) {
