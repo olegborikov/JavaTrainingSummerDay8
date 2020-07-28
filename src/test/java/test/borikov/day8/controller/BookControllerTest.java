@@ -52,6 +52,88 @@ public class BookControllerTest {
         assertEquals(actual, expected);
     }
 
+    @DataProvider(name = "processRequestAddBookPositiveData")
+    public Object[][] createProcessRequestAddBookPositiveData() {
+        String request = "add_book";
+        Map<String, String> data1 = new HashMap<>();
+        data1.put(DataKeyName.NAME, "Война и мир");
+        data1.put(DataKeyName.PUBLISHING_YEAR, "2020");
+        data1.put(DataKeyName.PUBLISHING_HOUSE, "Минск");
+        data1.put(DataKeyName.AUTHOR + "1", "Лев");
+        Map<String, Object> expected1 = new HashMap<>();
+        expected1.put(ResponseKeyName.ADDED_BOOK, true);
+        Map<String, String> data2 = new HashMap<>();
+        data2.put(DataKeyName.NAME, "This is very very long line with 43 symbols");
+        data2.put(DataKeyName.PUBLISHING_YEAR, "2020");
+        data2.put(DataKeyName.PUBLISHING_HOUSE, "Минск");
+        data2.put(DataKeyName.AUTHOR + "1", "Лев");
+        Map<String, Object> expected2 = new HashMap<>();
+        expected2.put(ResponseKeyName.ADDED_BOOK, false);
+        Map<String, String> data3 = new HashMap<>();
+        data3.put(DataKeyName.PUBLISHING_YEAR, "2020");
+        data3.put(DataKeyName.PUBLISHING_HOUSE, "Минск");
+        data3.put(DataKeyName.AUTHOR + "1", "Лев");
+        Map<String, Object> expected3 = new HashMap<>();
+        expected3.put(ResponseKeyName.ADDED_BOOK, false);
+        Map<String, String> data4 = null;
+        Map<String, Object> expected4 = new HashMap<>();
+        expected4.put(ResponseKeyName.ADDED_BOOK, false);
+        Map<String, String> data5 = new HashMap<>();
+        Map<String, Object> expected5 = new HashMap<>();
+        expected5.put(ResponseKeyName.ADDED_BOOK, false);
+        return new Object[][]{
+                {request, data1, expected1},
+                {request, data2, expected2},
+                {request, data3, expected3},
+                {request, data4, expected4},
+                {request, data5, expected5}
+        };
+    }
+
+    @Test(priority = 1, dataProvider = "processRequestAddBookPositiveData")
+    public void processRequestAddBookPositiveTest(
+            String request, Map<String, String> data, Map<String, Object> expected) {
+        Map<String, Object> actual = bookController.processRequest(request, data);
+        assertEquals(actual, expected);
+    }
+
+    @DataProvider(name = "processRequestAddBookNegativeData")
+    public Object[][] createProcessRequestAddBookNegativeData() {
+        String request = "add_book";
+        Map<String, String> data1 = new HashMap<>();
+        Map<String, Object> expected1 = new HashMap<>();
+        expected1.put(ResponseKeyName.ADDED_BOOK, true);
+        Map<String, String> data2 = new HashMap<>();
+        data2.put(DataKeyName.NAME, "This is very very long line with 43 symbols");
+        data2.put(DataKeyName.PUBLISHING_YEAR, "2020");
+        data2.put(DataKeyName.PUBLISHING_HOUSE, "Минск");
+        data2.put(DataKeyName.AUTHOR + "1", "Лев");
+        Map<String, Object> expected2 = new HashMap<>();
+        expected2.put(ResponseKeyName.ADDED_BOOK, true);
+        Map<String, String> data3 = new HashMap<>();
+        data3.put(DataKeyName.PUBLISHING_YEAR, "2020");
+        data3.put(DataKeyName.PUBLISHING_HOUSE, "Минск");
+        data3.put(DataKeyName.AUTHOR + "1", "Лев");
+        Map<String, Object> expected3 = new HashMap<>();
+        expected3.put(ResponseKeyName.ADDED_BOOK, true);
+        Map<String, String> data4 = null;
+        Map<String, Object> expected4 = new HashMap<>();
+        expected4.put(ResponseKeyName.ADDED_BOOK, true);
+        return new Object[][]{
+                {request, data1, expected1},
+                {request, data2, expected2},
+                {request, data3, expected3},
+                {request, data4, expected4}
+        };
+    }
+
+    @Test(dataProvider = "processRequestAddBookNegativeData")
+    public void processRequestAddBookNegativeTest(
+            String request, Map<String, String> data, Map<String, Object> expected) {
+        Map<String, Object> actual = bookController.processRequest(request, data);
+        assertNotEquals(actual, expected);
+    }
+
     @DataProvider(name = "processRequestFindAllBooksPositiveData")
     public Object[][] createProcessRequestFindAllBooksPositiveData() {
         String request = "find_all_books";
@@ -599,6 +681,160 @@ public class BookControllerTest {
 
     @Test(dataProvider = "processRequestFindBooksByPublishingYearIntervalNegativeData")
     public void processRequestFindBooksByPublishingYearIntervalNegativeTest(
+            String request, Map<String, String> data, Map<String, Object> expected) {
+        Map<String, Object> actual = bookController.processRequest(request, data);
+        assertNotEquals(actual, expected);
+    }
+
+    @DataProvider(name = "processRequestRemoveBookPositiveData")
+    public Object[][] createProcessRemoveBookPositiveData() {
+        String request = "remove_book";
+        Map<String, String> data1 = new HashMap<>();
+        List<Book> books1 = (List<Book>) bookController
+                .processRequest("find_all_books", null)
+                .get(ResponseKeyName.ALL_BOOKS);
+        Long id1 = books1.get(books1.size() - 1).getBookId();
+        data1.put(DataKeyName.ID, id1.toString());
+        Map<String, Object> expected1 = new HashMap<>();
+        expected1.put(ResponseKeyName.REMOVED_BOOK, true);
+        Map<String, String> data2 = new HashMap<>();
+        data2.put(DataKeyName.ID, "uh");
+        Map<String, Object> expected2 = new HashMap<>();
+        expected2.put(ResponseKeyName.REMOVED_BOOK, false);
+        Map<String, String> data3 = null;
+        Map<String, Object> expected3 = new HashMap<>();
+        expected3.put(ResponseKeyName.REMOVED_BOOK, false);
+        Map<String, String> data4 = new HashMap<>();
+        Map<String, Object> expected4 = new HashMap<>();
+        expected4.put(ResponseKeyName.REMOVED_BOOK, false);
+        return new Object[][]{
+                {request, data1, expected1},
+                {request, data2, expected2},
+                {request, data3, expected3},
+                {request, data4, expected4},
+        };
+    }
+
+    @Test(priority = 3, dataProvider = "processRequestRemoveBookPositiveData")
+    public void processRequestRemoveBookPositiveTest(
+            String request, Map<String, String> data, Map<String, Object> expected) {
+        Map<String, Object> actual = bookController.processRequest(request, data);
+        assertEquals(actual, expected);
+    }
+
+    @DataProvider(name = "processRequestRemoveBookNegativeData")
+    public Object[][] createProcessRequestRemoveBookNegativeData() {
+        String request = "remove_book";
+        Map<String, String> data1 = new HashMap<>();
+        Map<String, Object> expected1 = new HashMap<>();
+        expected1.put(ResponseKeyName.REMOVED_BOOK, true);
+        Map<String, String> data2 = new HashMap<>();
+        data2.put(DataKeyName.ID, "uh");
+        Map<String, Object> expected2 = new HashMap<>();
+        expected2.put(ResponseKeyName.REMOVED_BOOK, true);
+        Map<String, String> data3 = null;
+        Map<String, Object> expected3 = new HashMap<>();
+        expected3.put(ResponseKeyName.REMOVED_BOOK, true);
+        return new Object[][]{
+                {request, data1, expected1},
+                {request, data2, expected2},
+                {request, data3, expected3}
+        };
+    }
+
+    @Test(dataProvider = "processRequestRemoveBookNegativeData")
+    public void processRequestRemoveBookNegativeTest(
+            String request, Map<String, String> data, Map<String, Object> expected) {
+        Map<String, Object> actual = bookController.processRequest(request, data);
+        assertNotEquals(actual, expected);
+    }
+
+    @DataProvider(name = "processRequestUpdateBookPositiveData")
+    public Object[][] createProcessRequestUpdateBookPositiveData() {
+        String request = "update_book";
+        Map<String, String> data1 = new HashMap<>();
+        List<Book> books1 = (List<Book>) bookController
+                .processRequest("find_all_books", null)
+                .get(ResponseKeyName.ALL_BOOKS);
+        Long id1 = books1.get(books1.size() - 1).getBookId();
+        data1.put(DataKeyName.ID, id1.toString());
+        data1.put(DataKeyName.NAME, "Война");
+        data1.put(DataKeyName.PUBLISHING_YEAR, "2011");
+        data1.put(DataKeyName.PUBLISHING_HOUSE, "Qwe");
+        data1.put(DataKeyName.AUTHOR + "1", "qwe");
+        Map<String, Object> expected1 = new HashMap<>();
+        expected1.put(ResponseKeyName.UPDATED_BOOK, true);
+        Map<String, String> data2 = new HashMap<>();
+        data2.put(DataKeyName.ID, "1");
+        data2.put(DataKeyName.NAME, "This is very very long line with 43 symbols");
+        data2.put(DataKeyName.PUBLISHING_YEAR, "2020");
+        data2.put(DataKeyName.PUBLISHING_HOUSE, "Минск");
+        data2.put(DataKeyName.AUTHOR + "1", "Лев");
+        Map<String, Object> expected2 = new HashMap<>();
+        expected2.put(ResponseKeyName.UPDATED_BOOK, false);
+        Map<String, String> data3 = new HashMap<>();
+        data3.put(DataKeyName.NAME, "Война");
+        data3.put(DataKeyName.PUBLISHING_YEAR, "2020");
+        data3.put(DataKeyName.PUBLISHING_HOUSE, "Минск");
+        data3.put(DataKeyName.AUTHOR + "1", "Лев");
+        Map<String, Object> expected3 = new HashMap<>();
+        expected3.put(ResponseKeyName.UPDATED_BOOK, false);
+        Map<String, String> data4 = null;
+        Map<String, Object> expected4 = new HashMap<>();
+        expected4.put(ResponseKeyName.UPDATED_BOOK, false);
+        Map<String, String> data5 = new HashMap<>();
+        Map<String, Object> expected5 = new HashMap<>();
+        expected5.put(ResponseKeyName.UPDATED_BOOK, false);
+        return new Object[][]{
+                {request, data1, expected1},
+                {request, data2, expected2},
+                {request, data3, expected3},
+                {request, data4, expected4},
+                {request, data5, expected5}
+        };
+    }
+
+    @Test(priority = 2, dataProvider = "processRequestUpdateBookPositiveData")
+    public void processRequestUpdateBookPositiveTest(
+            String request, Map<String, String> data, Map<String, Object> expected) {
+        Map<String, Object> actual = bookController.processRequest(request, data);
+        assertEquals(actual, expected);
+    }
+
+    @DataProvider(name = "processRequestUpdateBookNegativeData")
+    public Object[][] createProcessRequestUpdateBookNegativeData() {
+        String request = "update_book";
+        Map<String, String> data1 = new HashMap<>();
+        Map<String, Object> expected1 = new HashMap<>();
+        expected1.put(ResponseKeyName.UPDATED_BOOK, true);
+        Map<String, String> data2 = new HashMap<>();
+        data2.put(DataKeyName.ID, "1");
+        data2.put(DataKeyName.NAME, "This is very very long line with 43 symbols");
+        data2.put(DataKeyName.PUBLISHING_YEAR, "2020");
+        data2.put(DataKeyName.PUBLISHING_HOUSE, "Минск");
+        data2.put(DataKeyName.AUTHOR + "1", "Лев");
+        Map<String, Object> expected2 = new HashMap<>();
+        expected2.put(ResponseKeyName.UPDATED_BOOK, true);
+        Map<String, String> data3 = new HashMap<>();
+        data3.put(DataKeyName.NAME, "Война");
+        data3.put(DataKeyName.PUBLISHING_YEAR, "2020");
+        data3.put(DataKeyName.PUBLISHING_HOUSE, "Минск");
+        data3.put(DataKeyName.AUTHOR + "1", "Лев");
+        Map<String, Object> expected3 = new HashMap<>();
+        expected3.put(ResponseKeyName.UPDATED_BOOK, true);
+        Map<String, String> data4 = null;
+        Map<String, Object> expected4 = new HashMap<>();
+        expected4.put(ResponseKeyName.UPDATED_BOOK, true);
+        return new Object[][]{
+                {request, data1, expected1},
+                {request, data2, expected2},
+                {request, data3, expected3},
+                {request, data4, expected4},
+        };
+    }
+
+    @Test(dataProvider = "processRequestUpdateBookNegativeData")
+    public void processRequestUpdateBookNegativeTest(
             String request, Map<String, String> data, Map<String, Object> expected) {
         Map<String, Object> actual = bookController.processRequest(request, data);
         assertNotEquals(actual, expected);

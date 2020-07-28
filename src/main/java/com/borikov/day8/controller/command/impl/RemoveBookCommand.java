@@ -25,6 +25,6 @@ public class RemoveBookCommand implements Command {
         }
         Map<String, Object> response = new HashMap<>();
         response.put(responseKey, result);
-        return null;
+        return response;
     }
 }
