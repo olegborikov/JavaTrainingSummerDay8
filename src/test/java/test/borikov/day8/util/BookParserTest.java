@@ -111,7 +111,8 @@ public class BookParserTest {
                 {"", new ArrayList<>()},
                 {"a, b, c", new ArrayList<>(Arrays.asList("a", "b", "c"))},
                 {"a, b,c", new ArrayList<>(Arrays.asList("a", "b,c"))},
-                {"Alex, Alex alex", new ArrayList<>(Arrays.asList("Alex", "Alex alex"))}
+                {"Alex, Alex alex", new ArrayList<>(Arrays.asList("Alex", "Alex alex"))},
+                {null, new ArrayList<>()}
         };
     }
 
@@ -145,7 +146,8 @@ public class BookParserTest {
                 {new ArrayList<>(), ""},
                 {new ArrayList<>(Arrays.asList("a", "b", "c")), "a, b, c"},
                 {new ArrayList<>(Arrays.asList("a", "b,c")), "a, b,c"},
-                {new ArrayList<>(Arrays.asList("Alex", "Alex alex")), "Alex, Alex alex"}
+                {new ArrayList<>(Arrays.asList("Alex", "Alex alex")), "Alex, Alex alex"},
+                {null, ""}
         };
     }
 

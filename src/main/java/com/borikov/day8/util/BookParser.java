@@ -7,14 +7,15 @@ import java.util.stream.Collectors;
 
 public class BookParser {
     private static final String COMMA = ", ";
-    private static final int DEFAULT_VALUE = -1;
+    private static final int DEFAULT_VALUE_NUMBER = -1;
+    private static final String DEFAULT_VALUE_STRING = "";
 
     public long parseId(String id) {
         long parsedId;
         try {
             parsedId = Long.parseLong(id);
         } catch (NumberFormatException e) {
-            parsedId = DEFAULT_VALUE;
+            parsedId = DEFAULT_VALUE_NUMBER;
         }
         return parsedId;
     }
@@ -24,14 +25,14 @@ public class BookParser {
         try {
             parsedPublishingYear = Integer.parseInt(publishingYear);
         } catch (NumberFormatException e) {
-            parsedPublishingYear = DEFAULT_VALUE;
+            parsedPublishingYear = DEFAULT_VALUE_NUMBER;
         }
         return parsedPublishingYear;
     }
 
     public List<String> parseAuthorsToList(String authors) {
         List<String> parsedAuthors = new ArrayList<>();
-        if (!authors.isBlank()) {
+        if (authors != null && !authors.isBlank()) {
             String[] authorsArr = authors.split(COMMA);
             parsedAuthors = new ArrayList<>(Arrays.asList(authorsArr));
         }
@@ -39,9 +40,12 @@ public class BookParser {
     }
 
     public String parseAuthorsToString(List<String> authors) {
-        String parsedAuthors = authors.stream()
-                .map(a -> String.valueOf(a))
-                .collect(Collectors.joining(COMMA));
+        String parsedAuthors = DEFAULT_VALUE_STRING;
+        if (authors != null) {
+            parsedAuthors = authors.stream()
+                    .map(a -> String.valueOf(a))
+                    .collect(Collectors.joining(COMMA));
+        }
         return parsedAuthors;
     }
 }
